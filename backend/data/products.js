@@ -1,6 +1,5 @@
 const products = [
     {
-        _id: "1",
         name: "Bag Of Devouring",
         image: "/images/bagOfDevouring.jpg",
         description:
@@ -13,7 +12,6 @@ const products = [
         numReviews: 12
     },
     {
-        _id: "2",
         name: "Cloak of the Bat",
         image: "/images/cloakOfTheBat.jpg",
         description: "Want to be Batman? I'M BATMANNNN! (Boosts stealth skills)",
@@ -25,7 +23,6 @@ const products = [
         numReviews: 8
     },
     {
-        _id: "4",
         name: "Dust Of Sneezing",
         image: "/images/dustOfSneezing.jpg",
         description:
@@ -38,7 +35,6 @@ const products = [
         numReviews: 12
     },
     {
-        _id: "5",
         name: "Tome of Health",
         image: "/images/statIncreasingManuals.jpg",
         description:
@@ -51,7 +47,6 @@ const products = [
         numReviews: 10
     },
     {
-        _id: "6",
         name: "Nolzur’s Marvelous Pigments",
         image: "/images/nolzursMagnificientPigments.jpg",
         description:
@@ -64,7 +59,6 @@ const products = [
         numReviews: 12
     },
     {
-        _id: "7",
         name: "Wand Of Wonder",
         image: "/images/wandOfWonder.jpg",
         description:
