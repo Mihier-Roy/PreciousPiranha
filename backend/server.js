@@ -1,11 +1,15 @@
 import express from "express";
 import dotenv from "dotenv";
+import connectDB from "./config/db.js";
 import morgan from "morgan";
 import helmet from "helmet";
 import logger from "./logger.js";
 
 // Load environment variables
 dotenv.config();
+
+// Connect to MongoDB
+connectDB();
 
 // Create express instance
 const app = express();
