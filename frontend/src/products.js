@@ -26,7 +26,7 @@ const products = [
     },
     {
         _id: "4",
-        name: "Dust Of Sneezing and Choking",
+        name: "Dust Of Sneezing",
         image: "/images/dustOfSneezing.jpg",
         description:
             "The dust resembles and magically identifies as dust of disappearance, an item that grants invisibility. However, instead of turning invisible, you and everyone with 30 feet start coughing and sneezing uncontrollably while you begin to suffocate to death.",
@@ -39,7 +39,7 @@ const products = [
     },
     {
         _id: "5",
-        name: "Stat Increasing Manual",
+        name: "Tome of Health",
         image: "/images/statIncreasingManuals.jpg",
         description:
             "Boost your stats through reading books! The three manuals are bodily health, gainful exercise, and quickness of action and they boost the reader’s Constitution, Strength, and Dexterity, respectively",
