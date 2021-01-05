@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Image, ListGroup, Button } from "react-bootstrap";
 import Rating from "../components/Rating";
-import products from "../products";
+import axios from "axios";
 
 const Product = ({ match }) => {
-    const product = products.find((prod) => prod._id === match.params.id);
+    const [product, setProduct] = useState({});
+
+    useEffect(() => {
+        const loadProducts = async () => {
+            const { data } = await axios.get(`/api/products/${match.params.id}`);
+            setProduct(data);
+        };
+
+        loadProducts();
+    }, [match.params.id]);
+
     return (
         <div>
             <Row>
@@ -14,7 +24,7 @@ const Product = ({ match }) => {
                 <Col md={3}>
                     <ListGroup variant="flush">
                         <ListGroup.Item>
-                            <h3>{product.name.toUpperCase()}</h3>
+                            <h3>{product.name}</h3>
                         </ListGroup.Item>
                         <ListGroup.Item>
                             <Rating value={product.rating} text={`${product.numReviews} reviews`} />
