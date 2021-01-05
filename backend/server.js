@@ -4,6 +4,7 @@ import connectDB from "./config/db.js";
 import morgan from "morgan";
 import helmet from "helmet";
 import logger from "./logger.js";
+import productRoutes from "./routes/productRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -26,9 +27,7 @@ app.use(
 );
 
 // Routes
-app.get("/", (req, res) => {
-    res.json("API is running");
-});
+app.use("/api/products", productRoutes);
 
 // Fetch the port to listen on from the environment file or fallback to port 5000
 const port = process.env.PORT || 5000;
