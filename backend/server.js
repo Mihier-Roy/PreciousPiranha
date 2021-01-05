@@ -5,6 +5,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import logger from "./logger.js";
 import productRoutes from "./routes/productRoutes.js";
+import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
 // Load environment variables
 dotenv.config();
@@ -28,6 +29,10 @@ app.use(
 
 // Routes
 app.use("/api/products", productRoutes);
+
+// Custom error handling middleware
+app.use(notFound);
+app.use(errorHandler);
 
 // Fetch the port to listen on from the environment file or fallback to port 5000
 const port = process.env.PORT || 5000;
