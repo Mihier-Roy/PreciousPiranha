@@ -13,6 +13,8 @@ node_modules/
 /build
 
 # misc
+*.log
+logs/
 .DS_Store
 .env
 .env.local
