@@ -21,3 +21,10 @@ export const addItemToCart = (id, quantity) => async (dispatch, getState) => {
     // Save the cartItems array to local storage so that it may be accessed again even if the user navigates away from the page
     localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
 };
+
+export const removeItemFromCart = (id) => (dispatch, getState) => {
+    dispatch({ type: CART_REMOVE_ITEM, payload: id });
+
+    // Update the local storage cartItems value using the state after the product has been removed from the cart
+    localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};

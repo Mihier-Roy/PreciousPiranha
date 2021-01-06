@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Col, FormControl, Image, ListGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import AlertMessage from "../components/AlertMessage";
-import { addItemToCart } from "../redux/actions/cartActions";
+import { addItemToCart, removeItemFromCart } from "../redux/actions/cartActions";
 
 const Cart = ({ match, location, history }) => {
     const productID = match.params.id;
@@ -20,7 +20,7 @@ const Cart = ({ match, location, history }) => {
     }, [dispatch, productID, quantity]);
 
     const removeItemHandler = (id) => {
-        console.log("removed : ", id);
+        dispatch(removeItemFromCart(id));
     };
 
     const checkoutHandler = (id) => {
@@ -31,6 +31,7 @@ const Cart = ({ match, location, history }) => {
         <Row>
             <Col md={8}>
                 <h3 className="pt-2 pb-3">Shopping Cart</h3>
+
                 {cartItems.length === 0 ? (
                     <AlertMessage variant="info">
                         There are no items in your cart! <Link to="/">Return</Link>
@@ -108,6 +109,7 @@ const Cart = ({ match, location, history }) => {
                             type="button"
                             className="btn-block"
                             disabled={cartItems.length === 0}
+                            variant="success"
                         >
                             Proceed to Checkout
                         </Button>
