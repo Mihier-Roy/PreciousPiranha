@@ -5,6 +5,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import logger from "./logger.js";
 import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 
 // Load environment variables
@@ -15,6 +16,9 @@ connectDB();
 
 // Create express instance
 const app = express();
+
+// Middleware to parse JSON POST body
+app.use(express.json());
 
 // Add helmet middleware
 app.use(helmet());
@@ -29,6 +33,7 @@ app.use(
 
 // Routes
 app.use("/api/products", productRoutes);
+app.use("/api/users", userRoutes);
 
 // Custom error handling middleware
 app.use(notFound);
