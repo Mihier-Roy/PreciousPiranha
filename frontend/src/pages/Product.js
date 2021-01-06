@@ -7,7 +7,7 @@ import AlertMessage from "../components/AlertMessage";
 import { listProductDetails } from "../redux/actions/productActions";
 import { Link } from "react-router-dom";
 
-const Product = ({ match }) => {
+const Product = ({ history, match }) => {
     const [quantity, setQuantity] = useState(0);
     const dispatch = useDispatch();
 
@@ -16,6 +16,10 @@ const Product = ({ match }) => {
     useEffect(() => {
         dispatch(listProductDetails(match.params.id));
     }, [dispatch, match.params.id]);
+
+    const addToCartHandler = () => {
+        history.push(`/cart/${match.params.id}?quantity=${quantity}`);
+    };
 
     return (
         <div>
@@ -98,6 +102,7 @@ const Product = ({ match }) => {
                                 )}
                                 <ListGroup.Item>
                                     <Button
+                                        onClick={addToCartHandler}
                                         className="btn-block"
                                         type="button"
                                         disabled={product.countInStock < 1 ? true : false}
