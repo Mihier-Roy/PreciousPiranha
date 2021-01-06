@@ -8,7 +8,7 @@ import { listProductDetails } from "../redux/actions/productActions";
 import { Link } from "react-router-dom";
 
 const Product = ({ history, match }) => {
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
 
     const { loading, error, product } = useSelector((state) => state.productDetails);
