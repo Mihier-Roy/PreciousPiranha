@@ -22,7 +22,7 @@ const cartItemsFromLocalStorage = localStorage.getItem("cartItems")
 // If userInfo is set, set the initial state to the values saved in local storage
 const userInfoFromLocalStorage = localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
-    : [];
+    : null;
 
 const initialState = {
     cart: {
