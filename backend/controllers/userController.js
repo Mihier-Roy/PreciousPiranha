@@ -44,6 +44,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     if (user) {
         res.status(201);
         res.json({
+            name: user.name,
             token: generateToken(user._id)
         });
     } else {
