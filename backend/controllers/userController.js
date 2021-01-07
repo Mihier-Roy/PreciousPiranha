@@ -19,8 +19,8 @@ export const authenticateUser = asyncHandler(async (req, res) => {
     }
 });
 
-// Description 	: Authenticates the user and returns a JWT to be uesd in future requests
-// Route 		: /api/users/login
+// Description 	: Registers a new user to the application and responds with a token upon successful creatinon.
+// Route 		: /api/users
 export const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
 
