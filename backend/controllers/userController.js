@@ -11,6 +11,7 @@ export const authenticateUser = asyncHandler(async (req, res) => {
 
     if (user && (await user.matchPassword(password))) {
         res.json({
+            name: user.name,
             token: generateToken(user._id)
         });
     } else {
