@@ -3,7 +3,7 @@ import User from "../models/userModel.js";
 import { generateToken } from "../utils/generateToken.js";
 
 // Description 	: Authenticates the user and returns a JWT to be uesd in future requests
-// Route 		: /api/users/login
+// Route 		: POST /api/users/login
 export const authenticateUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
@@ -21,7 +21,7 @@ export const authenticateUser = asyncHandler(async (req, res) => {
 });
 
 // Description 	: Registers a new user to the application and responds with a token upon successful creatinon.
-// Route 		: /api/users
+// Route 		: POST /api/users
 export const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -54,7 +54,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 // [PROTECTED ROUTE - Requires Authorization]
 // Description 	: Return user profile information when provided with the id of a user account
-// Route 		: /api/users/login
+// Route 		: GET /api/users/profile
 export const getUserProfile = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
 
