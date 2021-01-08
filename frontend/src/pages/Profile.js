@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import Loader from "../components/Loader";
 import AlertMessage from "../components/AlertMessage";
-import { getDetails } from "../redux/actions/userActions";
+import { getDetails, updateDetails, resetUpdateProfile } from "../redux/actions/userActions";
 
 const Profile = ({ history }) => {
     const [name, setName] = useState("");
@@ -11,32 +11,38 @@ const Profile = ({ history }) => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [message, setMessage] = useState(null);
-    const [success, setSuccess] = useState(null);
+    const [updateSuccess, setUpdateSuccess] = useState(null);
 
     const dispatch = useDispatch();
     const { loading, error, user } = useSelector((state) => state.userProfile);
     const { userInfo } = useSelector((state) => state.userLogin);
+    const { success, updateError } = useSelector((state) => state.userUpdateProfile);
 
     useEffect(() => {
         if (!userInfo) {
-            history.pushState("/");
+            history.push("/");
         } else {
-            if (!user) {
+            if (!user || !user.name || success) {
                 dispatch(getDetails());
+                dispatch(resetUpdateProfile());
             } else {
                 setName(user.name);
                 setEmail(user.email);
             }
         }
-    }, [dispatch, history, user, userInfo]);
+    }, [dispatch, history, user, userInfo, success]);
 
     const submitHandler = (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
             setMessage("Passwords do not match");
         } else {
+            dispatch(updateDetails({ name, email, password }));
+            setUpdateSuccess(true);
             setMessage(null);
-            setSuccess("Profile updated!");
+            setTimeout(() => {
+                setUpdateSuccess(null);
+            }, 3000);
         }
     };
     return (
@@ -45,8 +51,10 @@ const Profile = ({ history }) => {
                 <h3>Your Details</h3>
                 {loading && <Loader />}
                 {message && <AlertMessage variant="danger">{message}</AlertMessage>}
-                {success && <AlertMessage variant="success">{success}</AlertMessage>}
-                {error && <AlertMessage variant="danger">{error}</AlertMessage>}
+                {updateSuccess && <AlertMessage variant="success">Profile updated</AlertMessage>}
+                {(error || updateError) && (
+                    <AlertMessage variant="danger">{error || updateError}</AlertMessage>
+                )}
                 <Form onSubmit={submitHandler}>
                     <Form.Group controlId="name">
                         <Form.Label>Name</Form.Label>
