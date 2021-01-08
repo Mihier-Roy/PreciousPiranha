@@ -7,7 +7,10 @@ import {
     USER_REGISTER_FAIL,
     USER_REGISTER_REQUEST,
     USER_REGISTER_SUCCESS,
-    USER_REGISTER_CLEAR
+    USER_REGISTER_CLEAR,
+    USER_PROFILE_REQUEST,
+    USER_PROFILE_SUCCESS,
+    USER_PROFILE_FAIL
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -71,4 +74,28 @@ export const register = (name, email, password) => async (dispatch) => {
 
 export const clearRegisterState = () => (dispatch) => {
     dispatch({ type: USER_REGISTER_CLEAR });
+};
+
+export const getDetails = () => async (dispatch, getState) => {
+    dispatch({ type: USER_PROFILE_REQUEST });
+
+    try {
+        // Make a PUT request to the profiles endpint to update user information
+        const { data } = await axios.get(`/api/users/profile`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
+            }
+        });
+
+        dispatch({ type: USER_PROFILE_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({
+            type: USER_PROFILE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        });
+    }
 };
