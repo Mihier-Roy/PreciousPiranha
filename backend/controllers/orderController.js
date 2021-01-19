@@ -28,8 +28,13 @@ export const addOrderItems = asyncHandler(async (req, res) => {
             totalPrice,
             user: req.user._id
         });
-        const createdOrder = order.save();
-        res.status(201).json(createdOrder);
+        try {
+            const createdOrder = await order.save();
+            res.status(201).json(createdOrder);
+        } catch (error) {
+            res.status(500);
+            throw new Error("Unable to place order. Please try again.");
+        }
     }
 });
 
