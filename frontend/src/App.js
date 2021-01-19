@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Shipping from "./pages/Shipping";
 import PaymentMethod from "./pages/PaymentMethod";
+import PlaceOrder from "./pages/PlaceOrder";
 
 const App = () => {
     return (
@@ -18,13 +19,14 @@ const App = () => {
             <Header />
             <main className="py-3">
                 <Container>
-                    <Route path="/shipping" component={Shipping} />
-                    <Route path="/payment" component={PaymentMethod} />
                     <Route path="/login" component={Login} />
                     <Route path="/profile" component={Profile} />
                     <Route path="/register" component={Register} />
                     <Route path="/product/:id" component={Product} />
                     <Route path="/cart/:id?" component={Cart} />
+                    <Route path="/shipping" component={Shipping} />
+                    <Route path="/payment" component={PaymentMethod} />
+                    <Route path="/placeorder" component={PlaceOrder} />
                     <Route exact path="/" component={Home} />
                 </Container>
             </main>
