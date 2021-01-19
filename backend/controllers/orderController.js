@@ -38,13 +38,13 @@ export const addOrderItems = asyncHandler(async (req, res) => {
     }
 });
 
-// Description 	: Returns single product
-// Route 		: GET /api/product
-export const getProductsByID = asyncHandler(async (req, res) => {
-    const product = await Product.findById(req.params.id);
-    if (product) res.json(product);
+// Description 	: Returns an order
+// Route 		: GET /api/orders/:id
+export const getOrderById = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    if (order) res.json(order);
     else {
         res.status(404);
-        throw new Error("Product not found");
+        throw new Error("Order not found");
     }
 });
