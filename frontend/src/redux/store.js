@@ -9,6 +9,12 @@ import {
     userProfileReducer,
     userUpdateProfileReducer
 } from "./reducers/userReducers";
+import {
+    orderCreateReducer,
+    orderDetailsReducer,
+    orderPayReducer,
+    orderUserListReducer
+} from "./reducers/orderReducers";
 
 const reducer = combineReducers({
     productList: productListReducer,
@@ -17,7 +23,11 @@ const reducer = combineReducers({
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,
     userProfile: userProfileReducer,
-    userUpdateProfile: userUpdateProfileReducer
+    userUpdateProfile: userUpdateProfileReducer,
+    orderCreate: orderCreateReducer,
+    orderDetails: orderDetailsReducer,
+    orderPay: orderPayReducer,
+    orderUserList: orderUserListReducer
 });
 
 // Check local storage for cartItems
@@ -32,9 +42,16 @@ const userInfoFromLocalStorage = localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
     : null;
 
+// Check local storage for shippingAddress
+// If shippingAddress is set, set the initial state to the values saved in local storage
+const shippingAddressFromLocalStorage = localStorage.getItem("shippingAddress")
+    ? JSON.parse(localStorage.getItem("shippingAddress"))
+    : {};
+
 const initialState = {
     cart: {
-        cartItems: cartItemsFromLocalStorage
+        cartItems: cartItemsFromLocalStorage,
+        shippingAddress: shippingAddressFromLocalStorage
     },
     userLogin: {
         userInfo: userInfoFromLocalStorage

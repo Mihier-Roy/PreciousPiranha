@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Form, Row, Col } from "react-bootstrap";
+import { Button, Form, Row, Col, Table } from "react-bootstrap";
 import Loader from "../components/Loader";
 import AlertMessage from "../components/AlertMessage";
 import { getDetails, updateDetails, resetUpdateProfile } from "../redux/actions/userActions";
+import { listMyOrders } from "../redux/actions/orderActions";
+import { LinkContainer } from "react-router-bootstrap";
 
 const Profile = ({ history }) => {
     const [name, setName] = useState("");
@@ -17,6 +19,9 @@ const Profile = ({ history }) => {
     const { loading, error, user } = useSelector((state) => state.userProfile);
     const { userInfo } = useSelector((state) => state.userLogin);
     const { success, updateError } = useSelector((state) => state.userUpdateProfile);
+    const { orders, loading: loadingOrders, error: errorOrders } = useSelector(
+        (state) => state.orderUserList
+    );
 
     useEffect(() => {
         if (!userInfo) {
@@ -24,6 +29,7 @@ const Profile = ({ history }) => {
         } else {
             if (!user || !user.name || success) {
                 dispatch(getDetails());
+                dispatch(listMyOrders());
                 dispatch(resetUpdateProfile());
             } else {
                 setName(user.name);
@@ -47,7 +53,7 @@ const Profile = ({ history }) => {
     };
     return (
         <Row>
-            <Col md={4}>
+            <Col md={3}>
                 <h3>Your Details</h3>
                 {loading && <Loader />}
                 {message && <AlertMessage variant="danger">{message}</AlertMessage>}
@@ -95,7 +101,65 @@ const Profile = ({ history }) => {
                     <Button type="submit">Update</Button>
                 </Form>
             </Col>
-            <Col md={8}></Col>
+            <Col md={9}>
+                <h3>My Orders</h3>
+                {loadingOrders ? (
+                    <Loader />
+                ) : errorOrders ? (
+                    <AlertMessage variant="danger">{errorOrders}</AlertMessage>
+                ) : (
+                    <Table striped bordered hover responsive className="table=sm">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Paid</th>
+                                <th>Delivered</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {orders.map((order) => (
+                                <tr key={order._id}>
+                                    <td>{order._id}</td>
+                                    <td>{new Date(order.createdAt).toDateString()}</td>
+                                    <td>${order.totalPrice}</td>
+                                    <td>
+                                        {order.isPaid ? (
+                                            <span className="text-success">
+                                                {new Date(order.paidAt).toDateString()}
+                                            </span>
+                                        ) : (
+                                            <span className="text-danger">
+                                                <i className="fas fa-times"></i>
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td>
+                                        {order.isDelivered ? (
+                                            <span className="text-success">
+                                                {new Date(order.deliveredAt).toDateString()}
+                                            </span>
+                                        ) : (
+                                            <span className="text-danger">
+                                                <i className="fas fa-times"></i>
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td>
+                                        <LinkContainer to={`/order/${order._id}`}>
+                                            <Button className="btn-sm" variant="outline-primary">
+                                                Details
+                                            </Button>
+                                        </LinkContainer>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                )}
+            </Col>
         </Row>
     );
 };
