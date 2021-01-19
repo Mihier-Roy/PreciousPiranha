@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CheckoutSteps from "../components/CheckoutSteps";
 import AlertMessage from "../components/AlertMessage";
+import { createOrder } from "../redux/actions/orderActions";
+import { ORDER_CREATE_RESET } from "../redux/constants/orderConstants";
 
 const PlaceOrder = ({ history }) => {
+    const dispatch = useDispatch();
     const cart = useSelector((state) => state.cart);
 
     if (!cart.shippingAddress.address) {
@@ -29,7 +32,29 @@ const PlaceOrder = ({ history }) => {
         Number(cart.taxPrice)
     ).toFixed(2);
 
-    const placeOrderHandler = () => {};
+    // Get data from state to check if order was successfully placed
+    const { order, success, error, loading } = useSelector((state) => state.orderCreate);
+
+    useEffect(() => {
+        if (!loading && success) {
+            history.push(`/order/${order._id}`);
+            dispatch({ type: ORDER_CREATE_RESET });
+        }
+    }, [history, success, order, dispatch, loading]);
+
+    const placeOrderHandler = () => {
+        dispatch(
+            createOrder({
+                orderItems: cart.cartItems,
+                shippingAddress: cart.shippingAddress,
+                paymentMethod: cart.paymentMethod,
+                itemsPrice: cart.itemsPrice,
+                shippingPrice: cart.shippingPrice,
+                taxPrice: cart.taxPrice,
+                totalPrice: cart.totalPrice
+            })
+        );
+    };
 
     return (
         <>
@@ -116,7 +141,9 @@ const PlaceOrder = ({ history }) => {
                                     <Col>${cart.totalPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
-
+                            <ListGroup.Item>
+                                {error && <AlertMessage variant="danger">{error}</AlertMessage>}
+                            </ListGroup.Item>
                             <ListGroup.Item>
                                 <Button
                                     type="button"
