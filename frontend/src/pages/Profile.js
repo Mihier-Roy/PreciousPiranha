@@ -6,7 +6,6 @@ import AlertMessage from "../components/AlertMessage";
 import { getDetails, updateDetails, resetUpdateProfile } from "../redux/actions/userActions";
 import { listMyOrders } from "../redux/actions/orderActions";
 import { LinkContainer } from "react-router-bootstrap";
-import { ORDER_USER_LIST_RESET } from "../redux/constants/orderConstants";
 
 const Profile = ({ history }) => {
     const [name, setName] = useState("");
@@ -32,7 +31,6 @@ const Profile = ({ history }) => {
                 dispatch(getDetails());
                 dispatch(listMyOrders());
                 dispatch(resetUpdateProfile());
-                dispatch({ type: ORDER_USER_LIST_RESET });
             } else {
                 setName(user.name);
                 setEmail(user.email);
