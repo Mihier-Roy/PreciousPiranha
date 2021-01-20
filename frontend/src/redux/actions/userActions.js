@@ -16,7 +16,10 @@ import {
     USER_UPDATE_PROFILE_SUCCESS,
     USER_UPDATE_PROFILE_FAIL,
     USER_UPDATE_PROFILE_CLEAR,
-    USER_PROFILE_RESET
+    USER_PROFILE_RESET,
+    USER_LIST_REQUEST,
+    USER_LIST_SUCCESS,
+    USER_LIST_FAIL
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -119,7 +122,6 @@ export const updateDetails = (user) => async (dispatch, getState) => {
                 Authorization: `Bearer ${getState().userLogin.userInfo.token}`
             }
         });
-        console.log(data);
         dispatch({ type: USER_UPDATE_PROFILE_SUCCESS, payload: data });
         dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
         localStorage.setItem("userInfo", JSON.stringify(data));
@@ -136,4 +138,26 @@ export const updateDetails = (user) => async (dispatch, getState) => {
 
 export const resetUpdateProfile = () => (dispatch) => {
     dispatch({ type: USER_UPDATE_PROFILE_CLEAR });
+};
+
+export const getAllUsers = () => async (dispatch, getState) => {
+    dispatch({ type: USER_LIST_REQUEST });
+
+    try {
+        const { data } = await axios.get(`/api/users`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
+            }
+        });
+        dispatch({ type: USER_LIST_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({
+            type: USER_LIST_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        });
+    }
 };
