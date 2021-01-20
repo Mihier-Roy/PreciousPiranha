@@ -1,3 +1,4 @@
+import expressAsyncHandler from "express-async-handler";
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import { generateToken } from "../utils/generateToken.js";
@@ -104,4 +105,19 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
 export const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find({});
     res.json(users);
+});
+
+// [PROTECTED ROUTE - Requires Authorization - ADMIN ONLY]
+// Description 	: Deletes a given user
+// Route 		: DELETE /api/users/:id
+export const deleteUserById = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+        await user.remove();
+        res.json({ message: "Action completed!" });
+    } else {
+        res.status(404);
+        throw new Error("Invalid user");
+    }
 });

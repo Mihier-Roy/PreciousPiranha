@@ -4,7 +4,8 @@ import {
     getUserProfile,
     registerUser,
     updateUserProfile,
-    getAllUsers
+    getAllUsers,
+    deleteUserById
 } from "../controllers/userController.js";
 import { verifyToken, verifyAdmin } from "../middleware/authMiddleware.js";
 
@@ -13,5 +14,6 @@ const router = Router();
 router.route("/").post(registerUser).get(verifyToken, verifyAdmin, getAllUsers);
 router.post("/login", authenticateUser);
 router.route("/profile").get(verifyToken, getUserProfile).put(verifyToken, updateUserProfile);
+router.route("/:id").delete(verifyToken, verifyAdmin, deleteUserById);
 
 export default router;
