@@ -20,7 +20,10 @@ import {
     USER_LIST_REQUEST,
     USER_LIST_SUCCESS,
     USER_LIST_FAIL,
-    USER_LIST_CLEAR
+    USER_LIST_CLEAR,
+    USER_DELETE_REQUEST,
+    USER_DELETE_SUCCESS,
+    USER_DELETE_FAIL
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -156,6 +159,28 @@ export const getAllUsers = () => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: USER_LIST_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        });
+    }
+};
+
+export const deleteUser = (id) => async (dispatch, getState) => {
+    dispatch({ type: USER_DELETE_REQUEST });
+
+    try {
+        const { data } = await axios.delete(`/api/users/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
+            }
+        });
+        dispatch({ type: USER_DELETE_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({
+            type: USER_DELETE_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message
