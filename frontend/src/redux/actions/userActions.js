@@ -19,7 +19,8 @@ import {
     USER_PROFILE_RESET,
     USER_LIST_REQUEST,
     USER_LIST_SUCCESS,
-    USER_LIST_FAIL
+    USER_LIST_FAIL,
+    USER_LIST_CLEAR
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -52,6 +53,7 @@ export const logout = () => (disptach) => {
     disptach({ type: USER_LOGOUT });
     disptach({ type: USER_PROFILE_RESET });
     disptach({ type: ORDER_USER_LIST_RESET });
+    disptach({ type: USER_LIST_CLEAR });
 
     localStorage.removeItem("userInfo");
 };
