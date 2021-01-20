@@ -4,7 +4,7 @@ import { Table, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import AlertMessage from "../../components/AlertMessage";
 import Loader from "../../components/Loader";
-import { getAllUsers } from "../../redux/actions/userActions";
+import { getAllUsers, deleteUser } from "../../redux/actions/userActions";
 
 const UserList = ({ history }) => {
     const dispatch = useDispatch();
@@ -19,6 +19,13 @@ const UserList = ({ history }) => {
             history.push("/login");
         }
     }, [dispatch, history, userInfo]);
+
+    const deleteUserHandler = (id) => {
+        if (window.confirm("Are you sure you want to delete this user?")) {
+            dispatch(deleteUser(id));
+            dispatch(getAllUsers());
+        }
+    };
 
     return (
         <>
@@ -59,7 +66,11 @@ const UserList = ({ history }) => {
                                             <i className="fas fa-edit"></i>
                                         </Button>
                                     </LinkContainer>
-                                    <Button variant="danger" className="btn-sm">
+                                    <Button
+                                        variant="danger"
+                                        className="btn-sm"
+                                        onClick={() => deleteUserHandler(user._id)}
+                                    >
                                         <i className="fas fa-trash"></i>
                                     </Button>
                                 </td>
