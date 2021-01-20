@@ -121,3 +121,40 @@ export const deleteUserById = asyncHandler(async (req, res) => {
         throw new Error("Invalid user");
     }
 });
+
+// [PROTECTED ROUTE - Requires Authorization - ADMIN ONLY]
+// Description 	: Returns user info
+// Route 		: GET /api/users/:id
+export const getUserById = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id).select("-password");
+
+    if (user) {
+        res.json(user);
+    } else {
+        res.status(404);
+        throw new Error("Invalid user");
+    }
+});
+
+// [PROTECTED ROUTE - Requires Authorization - ADMIN ONLY]
+// Description 	: Updates a given user
+// Route 		: PUT /api/users/:id
+export const updateUserById = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id).select("-password");
+
+    if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        user.isAdmin = req.body.isAdmin;
+
+        const updatedUser = await user.save();
+        res.json({
+            name: updatedUser.name,
+            token: generateToken(updatedUser._id),
+            isAdmin: updatedUser.isAdmin
+        });
+    } else {
+        res.status(404);
+        throw new Error("Invalid user");
+    }
+});
