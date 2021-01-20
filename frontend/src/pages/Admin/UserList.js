@@ -11,6 +11,7 @@ const UserList = ({ history }) => {
 
     const { loading, error, users } = useSelector((state) => state.userList);
     const { userInfo } = useSelector((state) => state.userLogin);
+    const { success } = useSelector((state) => state.userDelete);
 
     useEffect(() => {
         if (userInfo && userInfo.isAdmin) {
@@ -18,12 +19,11 @@ const UserList = ({ history }) => {
         } else {
             history.push("/login");
         }
-    }, [dispatch, history, userInfo]);
+    }, [dispatch, history, userInfo, success]);
 
     const deleteUserHandler = (id) => {
         if (window.confirm("Are you sure you want to delete this user?")) {
             dispatch(deleteUser(id));
-            dispatch(getAllUsers());
         }
     };
 
