@@ -16,7 +16,7 @@ const UserList = ({ history }) => {
         if (userInfo && userInfo.isAdmin) {
             dispatch(getAllUsers());
         } else {
-            // history.push("/login");
+            history.push("/login");
         }
     }, [dispatch, history, userInfo]);
 
