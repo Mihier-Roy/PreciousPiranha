@@ -16,7 +16,20 @@ import {
     USER_UPDATE_PROFILE_SUCCESS,
     USER_UPDATE_PROFILE_FAIL,
     USER_UPDATE_PROFILE_CLEAR,
-    USER_PROFILE_RESET
+    USER_PROFILE_RESET,
+    USER_LIST_REQUEST,
+    USER_LIST_SUCCESS,
+    USER_LIST_FAIL,
+    USER_LIST_CLEAR,
+    USER_DELETE_REQUEST,
+    USER_DELETE_SUCCESS,
+    USER_DELETE_FAIL,
+    USER_ADMIN_UPDATE_REQUEST,
+    USER_ADMIN_UPDATE_SUCCESS,
+    USER_ADMIN_UPDATE_FAIL,
+    USER_ADMIN_DETAILS_REQUEST,
+    USER_ADMIN_DETAILS_SUCCESS,
+    USER_ADMIN_DETAILS_FAIL
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -49,6 +62,7 @@ export const logout = () => (disptach) => {
     disptach({ type: USER_LOGOUT });
     disptach({ type: USER_PROFILE_RESET });
     disptach({ type: ORDER_USER_LIST_RESET });
+    disptach({ type: USER_LIST_CLEAR });
 
     localStorage.removeItem("userInfo");
 };
@@ -119,7 +133,6 @@ export const updateDetails = (user) => async (dispatch, getState) => {
                 Authorization: `Bearer ${getState().userLogin.userInfo.token}`
             }
         });
-        console.log(data);
         dispatch({ type: USER_UPDATE_PROFILE_SUCCESS, payload: data });
         dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
         localStorage.setItem("userInfo", JSON.stringify(data));
@@ -136,4 +149,92 @@ export const updateDetails = (user) => async (dispatch, getState) => {
 
 export const resetUpdateProfile = () => (dispatch) => {
     dispatch({ type: USER_UPDATE_PROFILE_CLEAR });
+};
+
+export const getAllUsers = () => async (dispatch, getState) => {
+    dispatch({ type: USER_LIST_REQUEST });
+
+    try {
+        const { data } = await axios.get(`/api/users`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
+            }
+        });
+        dispatch({ type: USER_LIST_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({
+            type: USER_LIST_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        });
+    }
+};
+
+export const deleteUser = (id) => async (dispatch, getState) => {
+    dispatch({ type: USER_DELETE_REQUEST });
+
+    try {
+        const { data } = await axios.delete(`/api/users/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
+            }
+        });
+        dispatch({ type: USER_DELETE_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({
+            type: USER_DELETE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        });
+    }
+};
+
+export const getUserDetails = (id) => async (dispatch, getState) => {
+    dispatch({ type: USER_ADMIN_DETAILS_REQUEST });
+
+    try {
+        const { data } = await axios.get(`/api/users/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
+            }
+        });
+        dispatch({ type: USER_ADMIN_DETAILS_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({
+            type: USER_ADMIN_DETAILS_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        });
+    }
+};
+
+export const updateUser = (user) => async (dispatch, getState) => {
+    dispatch({ type: USER_ADMIN_UPDATE_REQUEST });
+
+    try {
+        const { data } = await axios.put(`/api/users/${user._id}`, user, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
+            }
+        });
+        dispatch({ type: USER_ADMIN_UPDATE_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({
+            type: USER_ADMIN_UPDATE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        });
+    }
 };

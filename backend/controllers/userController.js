@@ -1,3 +1,4 @@
+import expressAsyncHandler from "express-async-handler";
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import { generateToken } from "../utils/generateToken.js";
@@ -12,7 +13,8 @@ export const authenticateUser = asyncHandler(async (req, res) => {
     if (user && (await user.matchPassword(password))) {
         res.json({
             name: user.name,
-            token: generateToken(user._id)
+            token: generateToken(user._id),
+            isAdmin: user.isAdmin
         });
     } else {
         res.status(401);
@@ -45,7 +47,8 @@ export const registerUser = asyncHandler(async (req, res) => {
         res.status(201);
         res.json({
             name: user.name,
-            token: generateToken(user._id)
+            token: generateToken(user._id),
+            isAdmin: user.isAdmin
         });
     } else {
         res.status(401);
@@ -93,5 +96,65 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
     } else {
         res.status(404);
         throw new Error("No user found");
+    }
+});
+
+// [PROTECTED ROUTE - Requires Authorization - ADMIN ONLY]
+// Description 	: Returns all users
+// Route 		: GET /api/users
+export const getAllUsers = asyncHandler(async (req, res) => {
+    const users = await User.find({});
+    res.json(users);
+});
+
+// [PROTECTED ROUTE - Requires Authorization - ADMIN ONLY]
+// Description 	: Deletes a given user
+// Route 		: DELETE /api/users/:id
+export const deleteUserById = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+        await user.remove();
+        res.json({ message: "Action completed!" });
+    } else {
+        res.status(404);
+        throw new Error("Invalid user");
+    }
+});
+
+// [PROTECTED ROUTE - Requires Authorization - ADMIN ONLY]
+// Description 	: Returns user info
+// Route 		: GET /api/users/:id
+export const getUserById = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id).select("-password");
+
+    if (user) {
+        res.json(user);
+    } else {
+        res.status(404);
+        throw new Error("Invalid user");
+    }
+});
+
+// [PROTECTED ROUTE - Requires Authorization - ADMIN ONLY]
+// Description 	: Updates a given user
+// Route 		: PUT /api/users/:id
+export const updateUserById = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id).select("-password");
+
+    if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        user.isAdmin = req.body.isAdmin;
+
+        const updatedUser = await user.save();
+        res.json({
+            name: updatedUser.name,
+            token: generateToken(updatedUser._id),
+            isAdmin: updatedUser.isAdmin
+        });
+    } else {
+        res.status(404);
+        throw new Error("Invalid user");
     }
 });

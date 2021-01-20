@@ -29,3 +29,12 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
         throw new Error("Unauthorized");
     }
 });
+
+export const verifyAdmin = (req, res, next) => {
+    if (req.user && req.user.isAdmin) {
+        next();
+    } else {
+        res.staus(401);
+        throw new Error("Unauthorized");
+    }
+};
