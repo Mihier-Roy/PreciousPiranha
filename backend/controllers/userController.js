@@ -95,3 +95,11 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
         throw new Error("No user found");
     }
 });
+
+// [PROTECTED ROUTE - Requires Authorization - ADMIN ONLY]
+// Description 	: Returns all users
+// Route 		: GET /api/users
+export const getAllUsers = asyncHandler(async (req, res) => {
+    const users = await User.find({});
+    res.json(users);
+});
