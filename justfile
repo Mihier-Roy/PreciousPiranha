@@ -27,6 +27,19 @@ mongodb-seed-data:
     @echo "Inserting sample data into mongo database"
     cd backend; node sample-data/seeder.js;
 
+# Start local mongodb container on port 27017
+mongodb-start-container:
+    @echo "Launching docker container and listening on port 27017"
+    docker image pull mongo:5.0.7-focal
+    docker container run --rm -d -p 27017:27017 --name piranha-mongo mongo:5.0.7-focal
+    docker container ls -a
+
+# Stop local mongodb container
+mongodb-stop-container:
+    @echo "Stoping mongodb container"
+    docker container stop piranha-mongo
+    @echo "Stopped mongodb container"
+
 # Clear all data on database
 mongodb-delete-data:
     @echo "Removing all data from mongo database"
