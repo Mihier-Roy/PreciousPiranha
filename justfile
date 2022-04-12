@@ -19,4 +19,14 @@ run-js-frontend:
 
 # Launch js version of the application
 run-js:	run-js-backend run-js-frontend
+
+# Seed sample data into database
+mongodb-seed-data:
+	@echo "Inserting sample data into mongo database"
+	cd backend; node sample-data/seeder.js;
+
+# Clear all data on database
+mongodb-delete-data:
+	@echo "Removing all data from mongo database"
+	cd backend; node sample-data/seeder.js -d;
 	
