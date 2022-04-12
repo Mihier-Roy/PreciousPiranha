@@ -1,10 +1,10 @@
 # Install dependencies
 install-js-deps:
 	@echo "Installing deps for node server\n"
-	cd {{justfile_directory()}}/backend; npm install;
+	cd {{justfile_directory()}}/backend; npm install --no-fund --ignore-scripts;
 	@echo "Node dependencies installed!"
 	@echo "\nNow Installing deps for react application\n"
-	cd {{justfile_directory()}}/frontend; npm install
+	cd {{justfile_directory()}}/frontend; npm install --no-fund --ignore-scripts;
 	@echo "React dependencies installed!"
 
 # Run node backend in dev mode
