@@ -31,10 +31,10 @@ cargo install just
 ```
 
 ### Database
-The application uses MongoDB as it's persistence layer. You can run your own using Docker or use MongoDB Atlas. To run your own Docker container, use the following command:
+The application uses MongoDB as it's persistence layer. You can run your own using Docker or use MongoDB Atlas. The `justfile` includes the following commands to launch a container locally.
 ```bash
 docker image pull mongo:5.0.7-focal
-docker container run -d -p 27017:27017 --name piranha-mongo mongo:5.0.7-focal
+docker container run --rm -d -p 27017:27017 --name piranha-mongo mongo:5.0.7-focal
 ```
 
 ### Environment variables
@@ -60,7 +60,11 @@ just install-js-deps
 
 # Run JavaScript version of the application
 # Backend on :5000, frontend on :3000
+just mongodb-start-container
 just run-js-dev
+
+# Clean up container
+just mongodb-stop-container
 ```
 
 ## Credits
