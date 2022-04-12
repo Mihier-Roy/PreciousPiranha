@@ -16,13 +16,14 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "concurrently": "^7.1.0",
     "nodemon": "^2.0.6"
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "sample-data:seed": "node sample-data/seeder.js",
-    "sample-data:remove": "node sample-data/seeder.js -d"
+    "server": "nodemon server.js",
+    "client": "npm start --prefix ../frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
