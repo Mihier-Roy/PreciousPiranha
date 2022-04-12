@@ -7,18 +7,20 @@ install-js-deps:
     cd {{ justfile_directory() }}/frontend; npm install --no-fund --ignore-scripts;
     @echo "React dependencies installed!"
 
-# Run node backend in dev mode
-run-js-backend:
-    @echo "Launching node(express.js) server in dev mode (running with nodemon)\n"
-    cd {{ justfile_directory() }}/backend; npm run dev;
+# Run node backend with nodemon (Requires its own terminal)
+run-js-server:
+    @echo "\nLaunching node(express.js) server in dev mode (running with nodemon)"
+    cd {{ justfile_directory() }}/backend; npm run server;
 
-# Run react front-end
+# Run react front-end with hot reload (Requires it's own terminal)
 run-js-frontend:
     @echo "Launching react application with hot-reload\n"
     cd {{ justfile_directory() }}/frontend; npm start;
 
-# Launch js version of the application
-run-js: run-js-backend run-js-frontend
+# Launch js app in development mode using 'concurrently' and seed database
+run-js-dev: mongodb-seed-data
+	@echo "Launching backend and frontend using concurrently"
+	cd backend; npm run dev;
 
 # Seed sample data into database
 mongodb-seed-data:
