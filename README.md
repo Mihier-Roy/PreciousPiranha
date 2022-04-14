@@ -8,9 +8,9 @@ A simple eCommerce application to play around with programming web applications 
 	- [ ] net/http
 	- [ ] go-chi
 - [ ] Rust
-	- [ ] warp
-	- [ ] tokio
-	- [ ] auxm
+	- [ ] Auxum
+	- [ ] Rocket
+	- [ ] Acticx Web
 - [ ] Java (Spring)
 - [ ] Deno
 
