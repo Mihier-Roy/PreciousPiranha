@@ -13,6 +13,9 @@ A simple eCommerce application to play around with programming web applications 
 	- [ ] Acticx Web
 - [ ] Java (Spring)
 - [ ] Deno
+- [ ] Python
+	- [ ] Flask
+	- [ ] FastAPI
 
 ### Front-end
 - [x] React
