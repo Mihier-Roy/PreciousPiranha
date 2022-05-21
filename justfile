@@ -22,6 +22,11 @@ js-run-dev: db-seed-data
 	@echo "Launching backend and frontend using concurrently"
 	cd backend; npm run dev;
 
+# Build frontend production image
+js-build-frontend:
+    @echo "Building production image of React frontend"
+    cd frontend; docker build --rm -t piranha-frontend:0.1 .;
+
 # Seed sample data into database
 db-seed-data:
     @echo "Inserting sample data into mongo database"
