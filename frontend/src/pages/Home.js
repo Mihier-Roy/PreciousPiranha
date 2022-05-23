@@ -25,11 +25,11 @@ const Home = () => {
                 <AlertMessage variant="danger">{error}</AlertMessage>
             ) : (
                 <Row>
-                    {products.map((product) => (
+                    {products.length > 0 ? products.map((product) => (
                         <Col sm={12} md={6} lg={4} xl={3} key={product._id}>
                             <ProductCard product={product} />
                         </Col>
-                    ))}
+                    )) : ( <AlertMessage variant="info">It appears that there are no products in the database!</AlertMessage>)}
                 </Row>
             )}
         </>
