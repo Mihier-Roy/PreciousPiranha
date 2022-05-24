@@ -3,7 +3,7 @@
 version: '3'
 
 services:
-  # The React frontend
+  # The front-end nginx server. This serves built react files and proxies requests to the backend API.
   piranha-client:
     build:
       context: ./frontend
@@ -29,7 +29,10 @@ services:
       - ./backend/.env
   # The MongoDB server
   piranha-mongo:
-    image: mongo:5.0.7-focal
+    build:
+      context: ./mongo
+      dockerfile: Dockerfile
+    container_name: piranha-mongo
     networks:
       - piranha-network
     volumes:
