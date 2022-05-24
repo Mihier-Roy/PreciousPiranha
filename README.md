@@ -35,6 +35,16 @@ A simple eCommerce application to play around with programming web applications 
 git clone https://github.com/Mihier-Roy/PreciousPiranha.git
 cd PreciousPiranha
 
+# Create an environment file for the backend.
+cd backend
+cat >> .env<< EOF
+MONGO_URI = <your-mongo-connection-string-here>
+JWT_SECRET=<your-secret-key-here>
+PAYPAL_CLIENTID=
+PORT=5000
+NODE_ENV=development
+EOF
+
 # Build the container images. This installs dependencies and builds a production version of the react app.
 just build-prod
 # OR
