@@ -6,22 +6,23 @@ db.createCollection('users', { capped: false });
 db.createCollection('products', { capped: false });
 
 // Insert records into the users collection
+// Hash translates to FilthyHobbitses
 db.users.insertMany([
     {
         name: "Admin",
         email: "admin@mordor.org",
-        password: "FilthyHobbitses",
+        password: "$2y$10$JoOrWJdmbrieke.3ZlDR/eDNpIRO373JM1JxHWvd58S9urhOftPiy",
         isAdmin: true
     },
     {
         name: "Smeagol",
         email: "smeagz@mordor.org",
-        password: "FilthyHobbitses"
+        password: "$2y$10$JoOrWJdmbrieke.3ZlDR/eDNpIRO373JM1JxHWvd58S9urhOftPiy"
     },
     {
         name: "Bilbo Baggins",
         email: "bbaggins@mordor.org",
-        password: "FilthyHobbitses"
+        password: "$2y$10$JoOrWJdmbrieke.3ZlDR/eDNpIRO373JM1JxHWvd58S9urhOftPiy"
     }
 ]);
 
