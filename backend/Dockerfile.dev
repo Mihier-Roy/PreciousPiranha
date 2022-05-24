@@ -1,0 +1,16 @@
+# Use a minimal base image
+FROM node:18.2.0-alpine3.15
+
+WORKDIR /app
+
+# Copy dependency information and install all dependencies
+RUN npm install -g nodemon
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Copy source code (and all other relevant files)
+COPY . .
+
+# Expose the application on port 5000
+EXPOSE 5000
+CMD [ "nodemon", "-L", "server.js"]

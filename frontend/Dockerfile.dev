@@ -1,0 +1,11 @@
+# Use node 17.9 because 18.2 has an issue with setting the proxy hostname
+FROM node:17.9
+
+# Set working directory
+WORKDIR /app
+# Install app dependencies
+COPY package.json package-lock.json ./
+RUN npm ci
+# Run the application in dev mode using react-scripts
+COPY . ./
+CMD ["npm", "start"]
