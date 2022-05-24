@@ -1,6 +1,6 @@
 # This file uses multi-stage builds to generate a minimal deployment config
 # Stage 1: Build the react application and make the resulting files available to the next stage
-FROM node:18.2.0 AS build
+FROM node:17.9 AS build
 
 # Set working directory
 WORKDIR /app
