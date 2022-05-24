@@ -1,0 +1,66 @@
+# This is the docker-compose spec for a development version of the application
+# This file will deploy 3 containers, the CRA frontend, Express backend and MongoDB
+version: '3'
+
+services:
+  # The front-end CRA.
+  piranha-client:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: piranha-client
+    # Watch node_modules as well for hot reloading
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - piranha-dev-network
+    # Set watchpack_polling as true to allow hot reloads to work
+    environment:
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - piranha-server
+  # The Express Backend
+  piranha-server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: piranha-server
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    networks:
+      - piranha-dev-network
+    depends_on:
+      - piranha-mongo
+    env_file:
+      - ./backend/.env
+  # The MongoDB server
+  piranha-mongo:
+    build:
+      context: ./mongo
+      dockerfile: Dockerfile
+    container_name: piranha-mongo
+    # Write logs to file instead of spitting it out to the terminal
+    command:
+      - '--logpath'
+      - '/var/log/mongodb/mongod.log'
+    ports:
+      - "27017:27017"
+    networks:
+      - piranha-dev-network
+    volumes:
+      - piranha-data:/data:rw
+  
+# Declare a Docker network to be used for the application
+networks:
+  piranha-dev-network:
+    driver: bridge
+
+# Declare volumes used
+volumes:
+  piranha-data:
+    driver: local
