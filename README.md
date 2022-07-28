@@ -45,19 +45,19 @@ PORT=5000
 NODE_ENV=development
 EOF
 
-# Build the container images. This installs dependencies and builds a production version of the react app.
-just build-prod
+# Build the container images.
+just build-dev
 # OR
-# docker-compose -f docker-compose.yml build --no-cache --force-rm
+# docker-compose -f docker-compose.dev.yml build --no-cache --force-rm
 
 # Run the application
-# Front-end is accessible via :8080. Backend and DB are not exposed to the host.
-just run-prod
+# Front-end is accessible via :3000, API :5000, DB :27017. Client and API both support hot-reload.
+just run-dev
 # OR
-# docker-compose -f docker-compose.yml up -d
+# docker-compose -f docker-compose.dev.yml up
 
 # Clean up containers
-just stop-prod
+just stop
 # OR
 # docker-compose down --remove-orphans
 ```
