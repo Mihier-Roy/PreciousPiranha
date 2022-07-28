@@ -5,7 +5,7 @@ FROM node:17.9
 WORKDIR /app
 # Install app dependencies
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install
 # Run the application in dev mode using react-scripts
 COPY . ./
 CMD ["npm", "start"]
