@@ -1,7 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const Rating = ({ value, text }) => {
+type Props = {
+    value: number,
+    text: string
+}
+
+const Rating = ({ value, text }: Props) => {
     return (
         <div className="rating">
             <span>
