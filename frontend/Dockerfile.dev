@@ -8,9 +8,6 @@ WORKDIR /app
 COPY --chown=node:node package.json package-lock.json ./
 RUN npm install
 
-# Change ownership of the node_modules folder
-RUN chown -R node:node /app/node_modules
-
 # Run the application in dev mode using react-scripts
 COPY --chown=node:node . ./
 CMD ["npm", "start"]
