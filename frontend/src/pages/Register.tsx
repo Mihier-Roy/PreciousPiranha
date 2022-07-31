@@ -1,39 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
 import AlertMessage from "../components/AlertMessage";
-import { register, clearRegisterState } from "../redux/actions/userActions";
+import { register, clearRegisterState } from "../redux/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const Register = ({ location, history }) => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [message, setMessage] = useState(null);
+    const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
 
     // Identify if the user is to be redirected after registration is complete
     const redirect = location.search ? location.search.split("=")[1] : "/";
 
-    const dispatch = useDispatch();
-    const { loading, error, userInfo } = useSelector((state) => state.userRegister);
+    const dispatch = useAppDispatch();
+    const { loading, error, user } = useAppSelector((state) => state.auth);
 
     useEffect(() => {
-        if (userInfo) {
+        if (user) {
             history.push(redirect);
             dispatch(clearRegisterState());
         }
-    }, [dispatch, history, userInfo, redirect]);
+    }, [dispatch, history, user, redirect]);
 
     const submitHandler = (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
             setMessage("Passwords do not match");
         } else {
-            setMessage(null);
-            dispatch(register(name, email, password));
+            setMessage("");
+            dispatch(register({ name, email, password }));
         }
     };
 
@@ -41,7 +41,7 @@ const Register = ({ location, history }) => {
         <FormContainer>
             <h1>Sign In</h1>
             {loading && <Loader />}
-            {message && <AlertMessage variant="danger">{message}</AlertMessage>}
+            {message.length > 0 && <AlertMessage variant="danger">{message}</AlertMessage>}
             {error && <AlertMessage variant="danger">{error}</AlertMessage>}
             <Form onSubmit={submitHandler}>
                 <Form.Group controlId="name">
