@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
 import AlertMessage from "../components/AlertMessage";
-import { login } from "../redux/actions/userActions";
+import { login } from "../redux/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const Login = ({ location, history }) => {
     const [email, setEmail] = useState("");
@@ -14,18 +14,18 @@ const Login = ({ location, history }) => {
     // Identify if the user is to be redirected after login is complete
     const redirect = location.search ? location.search.split("=")[1] : "/";
 
-    const dispatch = useDispatch();
-    const { loading, error, userInfo } = useSelector((state) => state.userLogin);
+    const dispatch = useAppDispatch();
+    const { loading, error, user } = useAppSelector((state) => state.auth);
 
     useEffect(() => {
-        if (userInfo) {
+        if (user) {
             history.push(redirect);
         }
-    }, [history, userInfo, redirect]);
+    }, [history, user, redirect]);
 
     const submitHandler = (e) => {
         e.preventDefault();
-        dispatch(login(email, password));
+        dispatch(login({ email, password }));
     };
 
     return (
