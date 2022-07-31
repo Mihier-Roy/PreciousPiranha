@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import CheckoutSteps from "../components/CheckoutSteps";
-import { saveShippingAddress } from "../redux/actions/cartActions";
+import { saveShippingAddress } from "../redux/slices/cartSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const Shipping = ({ history }) => {
-    const cart = useSelector((state) => state.cart);
-    const { shippingAddress } = cart;
+    const dispatch = useAppDispatch();
+    const { shippingAddress } = useAppSelector((state) => state.cart);
+    const { address, city, postalCode, country } = shippingAddress;
 
-    const [address, setAddress] = useState(shippingAddress.address);
-    const [city, setCity] = useState(shippingAddress.city);
-    const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
-    const [country, setCountry] = useState(shippingAddress.country);
-
-    const dispatch = useDispatch();
+    const [stateAddress, setStateAddress] = useState<string>(address);
+    const [stateCity, setStateCity] = useState<string>(city);
+    const [statePostalCode, setStatePostalCode] = useState<string>(postalCode);
+    const [stateCountry, setStateCountry] = useState<string>(country);
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -32,9 +31,9 @@ const Shipping = ({ history }) => {
                     <Form.Control
                         type="text"
                         placeholder="Enter address"
-                        value={address}
+                        value={stateAddress}
                         required
-                        onChange={(e) => setAddress(e.target.value)}
+                        onChange={(e) => setStateAddress(e.target.value)}
                     ></Form.Control>
                 </Form.Group>
 
@@ -43,9 +42,9 @@ const Shipping = ({ history }) => {
                     <Form.Control
                         type="text"
                         placeholder="Enter city"
-                        value={city}
+                        value={stateCity}
                         required
-                        onChange={(e) => setCity(e.target.value)}
+                        onChange={(e) => setStateCity(e.target.value)}
                     ></Form.Control>
                 </Form.Group>
 
@@ -54,9 +53,9 @@ const Shipping = ({ history }) => {
                     <Form.Control
                         type="text"
                         placeholder="Enter postal code"
-                        value={postalCode}
+                        value={statePostalCode}
                         required
-                        onChange={(e) => setPostalCode(e.target.value)}
+                        onChange={(e) => setStatePostalCode(e.target.value)}
                     ></Form.Control>
                 </Form.Group>
 
@@ -65,9 +64,9 @@ const Shipping = ({ history }) => {
                     <Form.Control
                         type="text"
                         placeholder="Enter country"
-                        value={country}
+                        value={stateCountry}
                         required
-                        onChange={(e) => setCountry(e.target.value)}
+                        onChange={(e) => setStateCountry(e.target.value)}
                     ></Form.Control>
                 </Form.Group>
 
