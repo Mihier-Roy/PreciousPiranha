@@ -77,3 +77,10 @@ type UserProfile = {
     email: string;
     password: string;
 };
+
+type User = {
+    _id: string;
+    name: string;
+    email: string;
+    isAdmin: boolean;
+};
