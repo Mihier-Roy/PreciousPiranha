@@ -71,3 +71,9 @@ type RegisterData = {
     email: string;
     password: string;
 };
+
+type UserProfile = {
+    name: string;
+    email: string;
+    password: string;
+};
