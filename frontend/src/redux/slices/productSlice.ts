@@ -39,7 +39,7 @@ export const productSlice = createSlice({
         builder.addCase(listProducts.pending, (state) => {
             state.loading = true;
         });
-        builder.addCase(listProducts.fulfilled, (state, action) => {
+        builder.addCase(listProducts.fulfilled, (state, action: PayloadAction<ProductItem[]>) => {
             state.loading = false;
             state.products = action.payload;
         });
@@ -52,10 +52,13 @@ export const productSlice = createSlice({
         builder.addCase(listProductDetails.pending, (state) => {
             state.loading = true;
         });
-        builder.addCase(listProductDetails.fulfilled, (state, action) => {
-            state.loading = false;
-            state.product = action.payload;
-        });
+        builder.addCase(
+            listProductDetails.fulfilled,
+            (state, action: PayloadAction<ProductItem>) => {
+                state.loading = false;
+                state.product = action.payload;
+            }
+        );
         builder.addCase(listProductDetails.rejected, (state, action) => {
             state.loading = false;
             if (action.error.message) {

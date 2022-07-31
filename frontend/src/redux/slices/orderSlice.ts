@@ -76,7 +76,7 @@ export const orderSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(createOrder.pending, (state, action) => {
+            .addCase(createOrder.pending, (state) => {
                 state.loading = true;
             })
             .addCase(createOrder.fulfilled, (state, action: PayloadAction<OrderDetails>) => {
@@ -91,7 +91,7 @@ export const orderSlice = createSlice({
                     state.error = action.error.message;
                 }
             });
-        builder.addCase(getOrderDetails.pending, (state, action) => {
+        builder.addCase(getOrderDetails.pending, (state) => {
             state.loading = true;
         });
         builder.addCase(getOrderDetails.fulfilled, (state, action: PayloadAction<OrderDetails>) => {
