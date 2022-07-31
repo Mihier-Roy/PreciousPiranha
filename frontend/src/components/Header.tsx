@@ -1,12 +1,12 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { logout } from "../redux/actions/userActions";
+import { logout } from "../redux/slices/authSlice";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
 
 const Header = () => {
-    const dispatch = useDispatch();
-    const { userInfo } = useSelector((state) => state.userLogin);
+    const dispatch = useAppDispatch();
+    const { user } = useAppSelector((state) => state.auth);
 
     const logoutHandler = () => {
         dispatch(logout());
@@ -31,8 +31,8 @@ const Header = () => {
                                     Cart
                                 </Nav.Link>
                             </LinkContainer>
-                            {userInfo ? (
-                                <NavDropdown title={`Hello, ${userInfo.name}`} id="username">
+                            {user ? (
+                                <NavDropdown title={`Hello, ${user.name}`} id="username">
                                     <LinkContainer to="/profile">
                                         <NavDropdown.Item>Profile</NavDropdown.Item>
                                     </LinkContainer>
@@ -48,7 +48,7 @@ const Header = () => {
                                     </Nav.Link>
                                 </LinkContainer>
                             )}
-                            {userInfo && userInfo.isAdmin && (
+                            {user && user.isAdmin && (
                                 <NavDropdown title="Administrative Controls" id="admin-controls">
                                     <LinkContainer to="/admin/users">
                                         <NavDropdown.Item>Manage Users</NavDropdown.Item>
