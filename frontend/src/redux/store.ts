@@ -1,8 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 // import userReducer from "./features/userSlice";
-import cartReducer from "./features/cartSlice";
-import orderReducer from "./features/orderSlice";
-import productReducer from "./features/productSlice";
+import cartReducer from "./slices/cartSlice";
+import orderReducer from "./slices/orderSlice";
+import productReducer from "./slices/productSlice";
+import authReducer from "./slices/authSlice";
+import adminReducer from "./slices/adminSlice";
+import userReducer from "./slices/userSlice";
 
 // Check local storage for cartItems
 // If cartItems are present, set the initial state to the values saved in local storage
@@ -23,17 +26,20 @@ export const store = configureStore({
     reducer: {
         cart: cartReducer,
         order: orderReducer,
-        product: productReducer
+        product: productReducer,
+        auth: authReducer,
+        user: userReducer,
+        admin: adminReducer
     },
     preloadedState: {
         cart: {
             cartItems: cartItemsFromLocalStorage,
             shippingAddress: shippingAddressFromLocalStorage,
             paymentMethod: ""
+        },
+        auth: {
+            user: userInfoFromLocalStorage
         }
-        // userLogin: {
-        //     userInfo: userInfoFromLocalStorage
-        // }
     }
 });
 
