@@ -3,8 +3,8 @@ import axios from "axios";
 
 interface AuthState {
     user: UserAuthData | null;
-    loading: boolean;
-    error: string | null;
+    loading?: boolean;
+    error?: string | null;
 }
 
 const initialState: AuthState = {
