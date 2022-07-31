@@ -74,9 +74,11 @@ type RegisterData = {
 };
 
 type UserProfile = {
+    _id?: string;
+    token?: string;
     name: string;
     email: string;
-    password: string;
+    password?: string;
 };
 
 type User = {
