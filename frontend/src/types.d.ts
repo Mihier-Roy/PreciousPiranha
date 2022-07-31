@@ -42,11 +42,13 @@ type PaymentResult = {
 };
 
 type OrderDetails = {
+    _id?: string;
     user: string;
     orderItems: CartItem[];
     shippingAddress: ShippingAddress;
     paymentMethod: string;
     paymentResult: PaymentResult;
+    itemsPrice: number;
     taxPrice: number;
     shippingPrice: number;
     totalPrice: number;
