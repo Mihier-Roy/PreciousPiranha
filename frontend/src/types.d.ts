@@ -1,4 +1,5 @@
 type ProductItem = {
+    _id?: string;
     user: string;
     name: string;
     image: string;

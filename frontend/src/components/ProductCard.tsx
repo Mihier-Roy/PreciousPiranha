@@ -3,18 +3,9 @@ import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Rating from "./Rating";
 
-type Product = {
-    _id: number,
-    image: string,
-    name: string,
-    rating: number,
-    numReviews: number,
-    price: number
-}
-
 type Props = {
-    product: Product
-}
+    product: ProductItem;
+};
 
 const ProductCard = ({ product }: Props) => {
     return (
