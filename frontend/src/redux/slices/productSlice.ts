@@ -3,14 +3,26 @@ import axios from "axios";
 
 interface ProductState {
     products: ProductItem[];
-    product: ProductItem | {};
+    product: ProductItem;
     loading: boolean;
     error: string | null;
 }
 
 const initialState: ProductState = {
     products: [],
-    product: {},
+    product: {
+        user: "",
+        name: "",
+        image: "",
+        description: "",
+        brand: "",
+        category: "",
+        price: 0,
+        countInStock: 0,
+        rating: 0,
+        numReviews: 0,
+        reviews: []
+    },
     loading: false,
     error: null
 };
@@ -36,35 +48,34 @@ export const productSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(listProducts.pending, (state) => {
-            state.loading = true;
-        });
-        builder.addCase(listProducts.fulfilled, (state, action: PayloadAction<ProductItem[]>) => {
-            state.loading = false;
-            state.products = action.payload;
-        });
-        builder.addCase(listProducts.rejected, (state, action) => {
-            state.loading = false;
-            if (action.error.message) {
-                state.error = action.error.message;
-            }
-        });
-        builder.addCase(listProductDetails.pending, (state) => {
-            state.loading = true;
-        });
-        builder.addCase(
-            listProductDetails.fulfilled,
-            (state, action: PayloadAction<ProductItem>) => {
+        builder
+            .addCase(listProducts.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(listProducts.fulfilled, (state, action: PayloadAction<ProductItem[]>) => {
+                state.loading = false;
+                state.products = action.payload;
+            })
+            .addCase(listProducts.rejected, (state, action) => {
+                state.loading = false;
+                if (action.error.message) {
+                    state.error = action.error.message;
+                }
+            });
+        builder
+            .addCase(listProductDetails.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(listProductDetails.fulfilled, (state, action: PayloadAction<ProductItem>) => {
                 state.loading = false;
                 state.product = action.payload;
-            }
-        );
-        builder.addCase(listProductDetails.rejected, (state, action) => {
-            state.loading = false;
-            if (action.error.message) {
-                state.error = action.error.message;
-            }
-        });
+            })
+            .addCase(listProductDetails.rejected, (state, action) => {
+                state.loading = false;
+                if (action.error.message) {
+                    state.error = action.error.message;
+                }
+            });
     }
 });
 
