@@ -1,42 +1,43 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Row, Col, Table } from "react-bootstrap";
 import Loader from "../components/Loader";
 import AlertMessage from "../components/AlertMessage";
-import { getDetails, updateDetails, resetUpdateProfile } from "../redux/actions/userActions";
-import { listMyOrders } from "../redux/actions/orderActions";
 import { LinkContainer } from "react-router-bootstrap";
+import { getDetails, updateDetails, resetUpdateProfile } from "../redux/slices/userSlice";
+import { listOrders } from "../redux/slices/orderSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const Profile = ({ history }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [message, setMessage] = useState(null);
-    const [updateSuccess, setUpdateSuccess] = useState(null);
+    const [message, setMessage] = useState<string>("");
+    const [updateSuccess, setUpdateSuccess] = useState<boolean>(false);
 
-    const dispatch = useDispatch();
-    const { loading, error, user } = useSelector((state) => state.userProfile);
-    const { userInfo } = useSelector((state) => state.userLogin);
-    const { success, updateError } = useSelector((state) => state.userUpdateProfile);
-    const { orders, loading: loadingOrders, error: errorOrders } = useSelector(
-        (state) => state.orderUserList
-    );
+    const dispatch = useAppDispatch();
+    const { loading, error, success, userDetails } = useAppSelector((state) => state.user);
+    const { user } = useAppSelector((state) => state.auth);
+    const {
+        userOrders,
+        loading: loadingOrders,
+        error: errorOrders
+    } = useAppSelector((state) => state.order);
 
     useEffect(() => {
-        if (!userInfo) {
+        if (!user) {
             history.push("/");
         } else {
-            if (!user || !user.name || success) {
+            if (!userDetails || !userDetails.name || success) {
                 dispatch(getDetails());
-                dispatch(listMyOrders());
+                dispatch(listOrders());
                 dispatch(resetUpdateProfile());
             } else {
-                setName(user.name);
-                setEmail(user.email);
+                setName(userDetails.name);
+                setEmail(userDetails.email);
             }
         }
-    }, [dispatch, history, user, userInfo, success]);
+    }, [dispatch, history, user, userDetails, success]);
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -45,9 +46,9 @@ const Profile = ({ history }) => {
         } else {
             dispatch(updateDetails({ name, email, password }));
             setUpdateSuccess(true);
-            setMessage(null);
+            setMessage("");
             setTimeout(() => {
-                setUpdateSuccess(null);
+                setUpdateSuccess(false);
             }, 3000);
         }
     };
@@ -56,11 +57,9 @@ const Profile = ({ history }) => {
             <Col md={3}>
                 <h3>Your Details</h3>
                 {loading && <Loader />}
-                {message && <AlertMessage variant="danger">{message}</AlertMessage>}
+                {message.length > 0 && <AlertMessage variant="danger">{message}</AlertMessage>}
                 {updateSuccess && <AlertMessage variant="success">Profile updated</AlertMessage>}
-                {(error || updateError) && (
-                    <AlertMessage variant="danger">{error || updateError}</AlertMessage>
-                )}
+                {error && <AlertMessage variant="danger">{error}</AlertMessage>}
                 <Form onSubmit={submitHandler}>
                     <Form.Group controlId="name">
                         <Form.Label>Name</Form.Label>
@@ -120,7 +119,7 @@ const Profile = ({ history }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map((order) => (
+                            {userOrders.map((order) => (
                                 <tr key={order._id}>
                                     <td>{order._id}</td>
                                     <td>{new Date(order.createdAt).toDateString()}</td>
