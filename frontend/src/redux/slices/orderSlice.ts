@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface OrderState {
-    order: OrderDetails | {};
+    order: Partial<OrderDetails>;
     userOrders: OrderDetails[] | [];
     loading: boolean;
     success: boolean;
@@ -10,14 +10,14 @@ interface OrderState {
 }
 
 const initialState: OrderState = {
-    order: {},
+    order: {} as OrderDetails,
     userOrders: [],
     loading: false,
     success: false,
     error: null
 };
 
-export const createOrder = createAsyncThunk<OrderDetails, OrderDetails, { state }>(
+export const createOrder = createAsyncThunk<OrderDetails, Partial<OrderDetails>, { state }>(
     "order/createOrder",
     async (order, { getState }) => {
         const { data } = await axios.post(`/api/orders`, order, {
@@ -79,11 +79,14 @@ export const orderSlice = createSlice({
             .addCase(createOrder.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(createOrder.fulfilled, (state, action: PayloadAction<OrderDetails>) => {
-                state.loading = false;
-                state.success = true;
-                state.order = action.payload;
-            })
+            .addCase(
+                createOrder.fulfilled,
+                (state, action: PayloadAction<Partial<OrderDetails>>) => {
+                    state.loading = false;
+                    state.success = true;
+                    state.order = action.payload;
+                }
+            )
             .addCase(createOrder.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
@@ -91,21 +94,22 @@ export const orderSlice = createSlice({
                     state.error = action.error.message;
                 }
             });
-        builder.addCase(getOrderDetails.pending, (state) => {
-            state.loading = true;
-        });
-        builder.addCase(getOrderDetails.fulfilled, (state, action: PayloadAction<OrderDetails>) => {
-            state.loading = false;
-            state.success = true;
-            state.order = action.payload;
-        });
-        builder.addCase(getOrderDetails.rejected, (state, action) => {
-            state.loading = false;
-            state.success = false;
-            if (action.error.message) {
-                state.error = action.error.message;
-            }
-        });
+        builder
+            .addCase(getOrderDetails.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getOrderDetails.fulfilled, (state, action: PayloadAction<OrderDetails>) => {
+                state.loading = false;
+                state.success = true;
+                state.order = action.payload;
+            })
+            .addCase(getOrderDetails.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
+                if (action.error.message) {
+                    state.error = action.error.message;
+                }
+            });
         builder
             .addCase(payOrder.pending, (state) => {
                 state.loading = true;
@@ -122,21 +126,22 @@ export const orderSlice = createSlice({
                     state.error = action.error.message;
                 }
             });
-        builder.addCase(listOrders.pending, (state) => {
-            state.loading = true;
-        });
-        builder.addCase(listOrders.fulfilled, (state, action: PayloadAction<OrderDetails[]>) => {
-            state.loading = false;
-            state.success = true;
-            state.userOrders = action.payload;
-        });
-        builder.addCase(listOrders.rejected, (state, action) => {
-            state.loading = false;
-            state.success = false;
-            if (action.error.message) {
-                state.error = action.error.message;
-            }
-        });
+        builder
+            .addCase(listOrders.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(listOrders.fulfilled, (state, action: PayloadAction<OrderDetails[]>) => {
+                state.loading = false;
+                state.success = true;
+                state.userOrders = action.payload;
+            })
+            .addCase(listOrders.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
+                if (action.error.message) {
+                    state.error = action.error.message;
+                }
+            });
     }
 });
 
