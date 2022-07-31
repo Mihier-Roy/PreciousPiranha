@@ -3,13 +3,18 @@ import axios from "axios";
 
 interface CartState {
     cartItems: CartItem[];
-    shippingAddress: ShippingAddress | null;
+    shippingAddress: ShippingAddress;
     paymentMethod: "PayPal" | string;
 }
 
 const initialState: CartState = {
     cartItems: [],
-    shippingAddress: null,
+    shippingAddress: {
+        address: "",
+        city: "",
+        postalCode: "",
+        country: ""
+    },
     paymentMethod: "PayPal"
 };
 
@@ -59,20 +64,20 @@ export const cartSlice = createSlice({
                 };
             }
         },
-        removeItem: (state: CartState, action: PayloadAction<number>) => {
+        removeItem(state: CartState, action: PayloadAction<number>) {
             state.cartItems = state.cartItems.filter((item) => item.productID !== action.payload);
             localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
         },
-        saveShippingAddress: (state: CartState, action: PayloadAction<ShippingAddress>) => {
+        saveShippingAddress(state: CartState, action: PayloadAction<ShippingAddress>) {
             state.shippingAddress = action.payload;
             localStorage.setItem("shippingAddress", JSON.stringify(action.payload));
         },
-        savePaymentMethod: (state: CartState, action: PayloadAction<string>) => {
+        savePaymentMethod(state: CartState, action: PayloadAction<string>) {
             state.paymentMethod = action.payload;
             localStorage.setItem("paymentMethod", JSON.stringify(action.payload));
         }
     }
 });
 
-export const { addItem } = cartSlice.actions;
+export const { addItem, removeItem, saveShippingAddress, savePaymentMethod } = cartSlice.actions;
 export default cartSlice.reducer;
