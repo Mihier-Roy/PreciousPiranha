@@ -13,6 +13,15 @@ const initialState: CartState = {
     paymentMethod: "PayPal"
 };
 
+// Get product information from the API
+export const addItemToCart = createAsyncThunk<
+    { data: ProductItem; quantity: number },
+    { id: number; quantity: number }
+>("cart/addItem", async ({ id, quantity }) => {
+    const response = await axios.get(`/api/products/${id}`);
+    return { data: response.data, quantity };
+});
+
 export const cartSlice = createSlice({
     name: "cart",
     initialState,
@@ -67,9 +76,3 @@ export const cartSlice = createSlice({
 
 export const { addItem } = cartSlice.actions;
 export default cartSlice.reducer;
-
-// Get product information from the API
-export const addItemToCart = createAsyncThunk("cart/addItem", async (id, quantity) => {
-    const response = await axios.get(`/api/products/${id}`);
-    return { data: response.data, quantity };
-});

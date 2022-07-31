@@ -17,107 +17,37 @@ const initialState: OrderState = {
     error: null
 };
 
-export const orderSlice = createSlice({
-    name: "order",
-    initialState,
-    reducers: {
-        createOrder: (state, action: PayloadAction<OrderDetails>) => {
-            state.order = action.payload;
-        },
-        getOrderDetails: (state, action: PayloadAction<OrderDetails>) => {
-            state.order = action.payload;
-        },
-        payOrder: (state, action: PayloadAction<OrderDetails>) => {
-            state.order = action.payload;
-        },
-        listMyOrders: (state, action: PayloadAction<OrderDetails[]>) => {
-            state.userOrders = action.payload;
-        }
-    },
-    extraReducers: (builder) => {
-        builder.addCase(createOrderRequest.pending, (state, action) => {
-            state.loading = true;
-        });
-        builder.addCase(createOrderRequest.fulfilled, (state, action) => {
-            state.loading = false;
-            state.success = true;
-        });
-        builder.addCase(createOrderRequest.rejected, (state, action) => {
-            state.loading = false;
-            state.success = false;
-            if (action.error.message) {
-                state.error = action.error.message;
+export const createOrder = createAsyncThunk<OrderDetails, OrderDetails, { state }>(
+    "order/createOrder",
+    async (order, { getState }) => {
+        const { data } = await axios.post(`/api/orders`, order, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
             }
         });
-        builder.addCase(orderDetailsRequest.pending, (state, action) => {
-            state.loading = true;
-        });
-        builder.addCase(orderDetailsRequest.fulfilled, (state, action) => {
-            state.loading = false;
-            state.success = true;
-        });
-        builder.addCase(orderDetailsRequest.rejected, (state, action) => {
-            state.loading = false;
-            state.success = false;
-            if (action.error.message) {
-                state.error = action.error.message;
-            }
-        });
-        builder.addCase(payOrderRequest.pending, (state, action) => {
-            state.loading = true;
-        });
-        builder.addCase(payOrderRequest.fulfilled, (state, action) => {
-            state.loading = false;
-            state.success = true;
-        });
-        builder.addCase(payOrderRequest.rejected, (state, action) => {
-            state.loading = false;
-            state.success = false;
-            if (action.error.message) {
-                state.error = action.error.message;
-            }
-        });
-        builder.addCase(listOrdersRequest.pending, (state, action) => {
-            state.loading = true;
-        });
-        builder.addCase(listOrdersRequest.fulfilled, (state, action) => {
-            state.loading = false;
-            state.success = true;
-        });
-        builder.addCase(listOrdersRequest.rejected, (state, action) => {
-            state.loading = false;
-            state.success = false;
-            if (action.error.message) {
-                state.error = action.error.message;
-            }
-        });
+        return data as OrderDetails;
     }
-});
+);
 
-export const { createOrder, getOrderDetails, payOrder, listMyOrders } = orderSlice.actions;
-export default orderSlice.reducer;
+export const getOrderDetails = createAsyncThunk<OrderDetails, string, { state }>(
+    "order/getOrderDetails",
+    async (id, { getState }) => {
+        const { data } = await axios.get(`/api/orders/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
+            }
+        });
+        return data as OrderDetails;
+    }
+);
 
-export const createOrderRequest = createAsyncThunk("order/createOrder", async (order) => {
-    const { data } = await axios.post(`/api/orders`, order, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-        }
-    });
-    return data;
-});
-
-export const orderDetailsRequest = createAsyncThunk("order/getOrderDetails", async (id) => {
-    const { data } = await axios.get(`/api/orders/${id}`, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-        }
-    });
-    return data;
-});
-
-export const payOrderRequest = createAsyncThunk("order/payOrder", async (id, paymentResult) => {
+export const payOrder = createAsyncThunk<
+    OrderDetails,
+    { id: string; paymentResult: PaymentResult },
+    { state }
+>("order/payOrder", async ({ id, paymentResult }, { getState }) => {
     const { data } = await axios.put(`/api/orders/${id}/pay`, paymentResult, {
         headers: {
             "Content-Type": "application/json",
@@ -127,12 +57,87 @@ export const payOrderRequest = createAsyncThunk("order/payOrder", async (id, pay
     return data;
 });
 
-export const listOrdersRequest = createAsyncThunk("order/listMyOrders", async () => {
-    const { data } = await axios.get(`/api/orders/myorders`, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-        }
-    });
-    return data;
+export const listOrders = createAsyncThunk<OrderDetails[], void, { state }>(
+    "order/listMyOrders",
+    async (_, { getState }) => {
+        const { data } = await axios.get(`/api/orders/myorders`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
+            }
+        });
+        return data;
+    }
+);
+
+export const orderSlice = createSlice({
+    name: "order",
+    initialState,
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(createOrder.pending, (state, action) => {
+                state.loading = true;
+            })
+            .addCase(createOrder.fulfilled, (state, action: PayloadAction<OrderDetails>) => {
+                state.loading = false;
+                state.success = true;
+                state.order = action.payload;
+            })
+            .addCase(createOrder.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
+                if (action.error.message) {
+                    state.error = action.error.message;
+                }
+            });
+        builder.addCase(getOrderDetails.pending, (state, action) => {
+            state.loading = true;
+        });
+        builder.addCase(getOrderDetails.fulfilled, (state, action: PayloadAction<OrderDetails>) => {
+            state.loading = false;
+            state.success = true;
+            state.order = action.payload;
+        });
+        builder.addCase(getOrderDetails.rejected, (state, action) => {
+            state.loading = false;
+            state.success = false;
+            if (action.error.message) {
+                state.error = action.error.message;
+            }
+        });
+        builder
+            .addCase(payOrder.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(payOrder.fulfilled, (state, action: PayloadAction<OrderDetails>) => {
+                state.loading = false;
+                state.success = true;
+                state.order = action.payload;
+            })
+            .addCase(payOrder.rejected, (state, action) => {
+                state.loading = false;
+                state.success = false;
+                if (action.error.message) {
+                    state.error = action.error.message;
+                }
+            });
+        builder.addCase(listOrders.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(listOrders.fulfilled, (state, action: PayloadAction<OrderDetails[]>) => {
+            state.loading = false;
+            state.success = true;
+            state.userOrders = action.payload;
+        });
+        builder.addCase(listOrders.rejected, (state, action) => {
+            state.loading = false;
+            state.success = false;
+            if (action.error.message) {
+                state.error = action.error.message;
+            }
+        });
+    }
 });
+
+export default orderSlice.reducer;
