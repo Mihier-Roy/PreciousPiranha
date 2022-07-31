@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { Row, Col, ListGroup, Image, Card } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import { PayPalButton } from "react-paypal-button-v2";
 import AlertMessage from "../components/AlertMessage";
-import { getOrderDetails, payOrder } from "../redux/actions/orderActions";
-import { ORDER_PAY_RESET } from "../redux/constants/orderConstants";
 import Loading from "../components/Loader";
-import axios from "axios";
+import { getOrderDetails, payOrder } from "../redux/slices/orderSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const OrderDetails = ({ match }) => {
     const orderID = match.params.id;
-    const dispatch = useDispatch();
-    const [sdkReady, setSdkReady] = useState(false);
+    const dispatch = useAppDispatch();
+    const [sdkReady, setSdkReady] = useState<boolean>(false);
 
     // Get data from state to check if order was successfully placed
-    const { order, error, loading } = useSelector((state) => state.orderDetails);
-    const { success: successPay, loading: loadingPay } = useSelector((state) => state.orderPay);
+    const { order, error, loading } = useAppSelector((state) => state.order);
+    const { success: successPay, loading: loadingPay } = useAppSelector((state) => state.order);
 
     if (!loading && !error) {
-        const addDecimals = (num) => {
-            return (Math.round(num * 100) / 100).toFixed(2);
+        const addDecimals = (num: number) => {
+            return Math.round(num * 100) / 100;
         };
-        order.itemsPrice = addDecimals(
-            order.orderItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
-        );
+        if (order.orderItems !== undefined) {
+            order.itemsPrice = addDecimals(
+                order.orderItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+            );
+        }
     }
 
     useEffect(() => {
@@ -42,7 +43,6 @@ const OrderDetails = ({ match }) => {
         };
 
         if (!order || successPay || order._id !== orderID) {
-            dispatch({ type: ORDER_PAY_RESET });
             dispatch(getOrderDetails(orderID));
         } else if (!order.isPaid) {
             if (!window.paypal) {
@@ -55,7 +55,7 @@ const OrderDetails = ({ match }) => {
 
     const successPaymentHandler = (paymentResult) => {
         console.log(paymentResult);
-        dispatch(payOrder(orderID, paymentResult));
+        dispatch(payOrder({ id: orderID, paymentResult }));
     };
 
     return loading ? (
@@ -70,17 +70,24 @@ const OrderDetails = ({ match }) => {
                     <ListGroup variant="flush">
                         <ListGroup.Item>
                             <h3>Shipping</h3>
-                            <strong>Name: </strong> {order.user.name}
-                            <br />
-                            <strong>Email: </strong> {order.user.email}
-                            <p>
-                                <strong>Address: </strong>
-                                {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
-                                {order.shippingAddress.postalCode}, {order.shippingAddress.country}
-                            </p>
-                            {order.isDelivered ? (
+                            {order.user && (
+                                <>
+                                    <strong>Name: </strong> {order.user.name}
+                                    <br />
+                                    <strong>Email: </strong> {order.user.email}
+                                </>
+                            )}
+                            {order.shippingAddress && (
+                                <p>
+                                    <strong>Address: </strong>
+                                    {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
+                                    {order.shippingAddress.postalCode},{" "}
+                                    {order.shippingAddress.country}
+                                </p>
+                            )}
+                            {order.isDelivered && order.deliveredAt ? (
                                 <AlertMessage variant="success">
-                                    Delivered on {order.deliveredAt}
+                                    Delivered on {order.deliveredAt.toString()}
                                 </AlertMessage>
                             ) : (
                                 <AlertMessage variant="warning">Not Delivered</AlertMessage>
@@ -92,9 +99,9 @@ const OrderDetails = ({ match }) => {
                                 <strong>Method: </strong>
                                 {order.paymentMethod}
                             </p>
-                            {order.isPaid ? (
+                            {order.isPaid && order.paidAt ? (
                                 <AlertMessage variant="success">
-                                    Paid on {Date(order.paidAt).toString()}
+                                    Paid on {order.paidAt.toString()}
                                 </AlertMessage>
                             ) : (
                                 <AlertMessage variant="warning">Not Paid</AlertMessage>
@@ -103,29 +110,30 @@ const OrderDetails = ({ match }) => {
                         <ListGroup.Item>
                             <h3>Order Items</h3>
                             <ListGroup variant="flush">
-                                {order.orderItems.map((item, index) => (
-                                    <ListGroup.Item key={index}>
-                                        <Row>
-                                            <Col md={1}>
-                                                <Image
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    fluid
-                                                    rounded
-                                                />
-                                            </Col>
-                                            <Col>
-                                                <Link to={`/product/${item.productID}`}>
-                                                    {item.name}
-                                                </Link>
-                                            </Col>
-                                            <Col md={4}>
-                                                {item.quantity} x ${item.price} = $
-                                                {item.quantity * item.price}
-                                            </Col>
-                                        </Row>
-                                    </ListGroup.Item>
-                                ))}
+                                {order.orderItems &&
+                                    order.orderItems.map((item, index) => (
+                                        <ListGroup.Item key={index}>
+                                            <Row>
+                                                <Col md={1}>
+                                                    <Image
+                                                        src={item.image}
+                                                        alt={item.name}
+                                                        fluid
+                                                        rounded
+                                                    />
+                                                </Col>
+                                                <Col>
+                                                    <Link to={`/product/${item.productID}`}>
+                                                        {item.name}
+                                                    </Link>
+                                                </Col>
+                                                <Col md={4}>
+                                                    {item.quantity} x ${item.price} = $
+                                                    {item.quantity * item.price}
+                                                </Col>
+                                            </Row>
+                                        </ListGroup.Item>
+                                    ))}
                             </ListGroup>
                         </ListGroup.Item>
                     </ListGroup>
