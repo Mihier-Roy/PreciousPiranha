@@ -4,12 +4,14 @@ import axios from "axios";
 interface UserProfileState {
     userDetails: UserProfile | null;
     loading: boolean;
+    success: boolean;
     error: string | null;
 }
 
 const initialState: UserProfileState = {
     userDetails: null,
     loading: false,
+    success: false,
     error: null
 };
 
@@ -27,15 +29,16 @@ export const getDetails = createAsyncThunk<UserProfile, void, { state }>(
     }
 );
 
-export const updateDetails = createAsyncThunk<UserProfile, UserProfile, { state }>(
+export const updateDetails = createAsyncThunk<UserProfile, UserProfile, { state; dispatch }>(
     "user/updateDetails",
-    async (user, { getState }) => {
+    async (user, { getState, dispatch }) => {
         const { data } = await axios.put(`/api/users/profile`, user, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${getState().userLogin.userInfo.token}`
             }
         });
+        dispatch({ type: "auth/login/fulfilled", payload: data });
         return data as UserProfile;
     }
 );
@@ -70,9 +73,7 @@ export const userSlice = createSlice({
             .addCase(updateDetails.fulfilled, (state, action: PayloadAction<UserProfile>) => {
                 state.loading = false;
                 state.userDetails = action.payload;
-                // dispatch({ type: USER_UPDATE_PROFILE_SUCCESS, payload: data });
-                // dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-                localStorage.setItem("userInfo", JSON.stringify(action.payload));
+                state.success = true;
             })
             .addCase(updateDetails.rejected, (state, action) => {
                 state.loading = false;
