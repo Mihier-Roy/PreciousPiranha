@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Image, ListGroup, Button, FormControl } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import AlertMessage from "../components/AlertMessage";
-import { listProductDetails } from "../redux/actions/productActions";
-import { Link } from "react-router-dom";
+import { listProductDetails } from "../redux/slices/productSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const Product = ({ history, match }) => {
+    const dispatch = useAppDispatch();
     const [quantity, setQuantity] = useState(1);
-    const dispatch = useDispatch();
-
-    const { loading, error, product } = useSelector((state) => state.productDetails);
+    const { loading, error, product } = useAppSelector((state) => state.product);
 
     useEffect(() => {
         dispatch(listProductDetails(match.params.id));
@@ -32,7 +31,8 @@ const Product = ({ history, match }) => {
                     <Row>
                         <Link to="/">
                             <Button type="button" variant="light">
-                                <i class="fas fa-arrow-left" style={{ paddingRight: 5 }}></i>Back
+                                <i className="fas fa-arrow-left" style={{ paddingRight: 5 }}></i>
+                                Back
                             </Button>
                         </Link>
                     </Row>
@@ -83,7 +83,9 @@ const Product = ({ history, match }) => {
                                                 <FormControl
                                                     as="select"
                                                     value={quantity}
-                                                    onChange={(e) => setQuantity(e.target.value)}
+                                                    onChange={(e) =>
+                                                        setQuantity(parseInt(e.target.value))
+                                                    }
                                                 >
                                                     {[...Array(product.countInStock).keys()].map(
                                                         (count) => (
