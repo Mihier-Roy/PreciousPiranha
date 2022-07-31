@@ -43,7 +43,7 @@ type PaymentResult = {
 
 type OrderDetails = {
     _id?: string;
-    user: string;
+    user: User;
     orderItems: CartItem[];
     shippingAddress: ShippingAddress;
     paymentMethod: string;
