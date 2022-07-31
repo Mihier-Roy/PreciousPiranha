@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import CheckoutSteps from "../components/CheckoutSteps";
 import AlertMessage from "../components/AlertMessage";
-import { createOrder } from "../redux/actions/orderActions";
-import { ORDER_CREATE_RESET } from "../redux/constants/orderConstants";
+import { createOrder } from "../redux/slices/orderSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const PlaceOrder = ({ history }) => {
-    const dispatch = useDispatch();
-    const cart = useSelector((state) => state.cart);
+    const dispatch = useAppDispatch();
+    const cart = useAppSelector((state) => state.cart);
+    // Get data from state to check if order was successfully placed
+    const { order, success, error, loading } = useAppSelector((state) => state.order);
 
     if (!cart.shippingAddress.address) {
         history.push("/shipping");
@@ -18,27 +19,23 @@ const PlaceOrder = ({ history }) => {
     }
 
     // Calculate item, shipping, tax and total prices
-    const addDecimals = (num) => {
-        return (Math.round(num * 100) / 100).toFixed(2);
+    const addDecimals = (num: number) => {
+        return Math.round(num * 100) / 100;
     };
-    cart.itemsPrice = addDecimals(
+    order.itemsPrice = addDecimals(
         cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
     );
-    cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 10);
-    cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
-    cart.totalPrice = (
-        Number(cart.itemsPrice) +
-        Number(cart.shippingPrice) +
-        Number(cart.taxPrice)
-    ).toFixed(2);
 
-    // Get data from state to check if order was successfully placed
-    const { order, success, error, loading } = useSelector((state) => state.orderCreate);
+    order.shippingPrice = addDecimals(order.itemsPrice > 100 ? 0 : 10);
+    order.taxPrice = addDecimals(0.15 * order.itemsPrice);
+    order.totalPrice =
+        Number(order.itemsPrice) + Number(order.shippingPrice) + Number(order.taxPrice);
 
     useEffect(() => {
         if (!loading && success) {
-            history.push(`/order/${order._id}`);
-            dispatch({ type: ORDER_CREATE_RESET });
+            if ("_id" in order) {
+                history.push(`/order/${order._id}`);
+            }
         }
     }, [history, success, order, dispatch, loading]);
 
@@ -48,10 +45,10 @@ const PlaceOrder = ({ history }) => {
                 orderItems: cart.cartItems,
                 shippingAddress: cart.shippingAddress,
                 paymentMethod: cart.paymentMethod,
-                itemsPrice: cart.itemsPrice,
-                shippingPrice: cart.shippingPrice,
-                taxPrice: cart.taxPrice,
-                totalPrice: cart.totalPrice
+                itemsPrice: order.itemsPrice ? order.itemsPrice : 0,
+                shippingPrice: order.shippingPrice ? order.shippingPrice : 0,
+                taxPrice: order.taxPrice ? order.taxPrice : 0,
+                totalPrice: order.totalPrice ? order.totalPrice : 0
             })
         );
     };
@@ -80,7 +77,7 @@ const PlaceOrder = ({ history }) => {
                         <ListGroup.Item>
                             <h2>Order Items</h2>
                             {cart.cartItems.length === 0 ? (
-                                <AlertMessage>Your cart is empty</AlertMessage>
+                                <AlertMessage variant="warning">Your cart is empty</AlertMessage>
                             ) : (
                                 <ListGroup variant="flush">
                                     {cart.cartItems.map((item, index) => (
@@ -120,25 +117,25 @@ const PlaceOrder = ({ history }) => {
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Items</Col>
-                                    <Col>${cart.itemsPrice}</Col>
+                                    <Col>${order.itemsPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Shipping</Col>
-                                    <Col>${cart.shippingPrice}</Col>
+                                    <Col>${order.shippingPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Tax</Col>
-                                    <Col>${cart.taxPrice}</Col>
+                                    <Col>${order.taxPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Total</Col>
-                                    <Col>${cart.totalPrice}</Col>
+                                    <Col>${order.totalPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
@@ -148,7 +145,7 @@ const PlaceOrder = ({ history }) => {
                                 <Button
                                     type="button"
                                     className="btn-block"
-                                    disabled={cart.cartItems === 0}
+                                    disabled={cart.cartItems.length === 0}
                                     onClick={placeOrderHandler}
                                 >
                                     Place Order
