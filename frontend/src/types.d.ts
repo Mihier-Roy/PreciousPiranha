@@ -54,3 +54,20 @@ type OrderDetails = {
     isDelivered: boolean;
     deliveredAt: Date | null;
 };
+
+type UserAuthData = {
+    name: string;
+    token: string;
+    isAdmin: boolean;
+};
+
+type LoginData = {
+    email: string;
+    password: string;
+};
+
+type RegisterData = {
+    name: string;
+    email: string;
+    password: string;
+};

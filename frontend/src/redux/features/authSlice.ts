@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 interface AuthState {
-    user: User | null;
+    user: UserAuthData | null;
     loading: boolean;
     error: string | null;
 }
@@ -56,7 +56,7 @@ export const authSlice = createSlice({
             .addCase(login.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
+            .addCase(login.fulfilled, (state, action: PayloadAction<UserAuthData>) => {
                 state.loading = false;
                 state.user = action.payload;
                 // Save token to local storage.
@@ -72,7 +72,7 @@ export const authSlice = createSlice({
             .addCase(register.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(register.fulfilled, (state, action: PayloadAction<User>) => {
+            .addCase(register.fulfilled, (state, action: PayloadAction<UserAuthData>) => {
                 state.loading = false;
                 state.user = action.payload;
                 // Save token to local storage.
