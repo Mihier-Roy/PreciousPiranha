@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { postRequest } from "../../client/api";
+import { postRequest, setToken } from "../../client/api";
 import { RootState } from "../store";
 
 interface AuthState {
@@ -18,7 +18,7 @@ export const login = createAsyncThunk<UserAuthData, LoginData>(
     "auth/login",
     async (loginData: LoginData) => {
         const { email, password } = loginData;
-        const { data } = await postRequest(`/api/users/login`, { email, password }, false);
+        const { data } = await postRequest(`/api/users/login`, { email, password });
         return data as UserAuthData;
     }
 );
@@ -28,7 +28,7 @@ export const register = createAsyncThunk<UserAuthData, RegisterData>(
     async (registerData: RegisterData) => {
         const { name, email, password } = registerData;
         // Make a request to the registeration endpoint to register the user and retrieve a token
-        const { data } = await postRequest(`/api/users`, { name, email, password }, false);
+        const { data } = await postRequest(`/api/users`, { name, email, password });
         return data as UserAuthData;
     }
 );
@@ -57,6 +57,7 @@ export const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action: PayloadAction<UserAuthData>) => {
                 state.loading = false;
                 state.user = action.payload;
+                setToken(action.payload.token);
                 // Save token to local storage.
                 localStorage.setItem("userInfo", JSON.stringify(action.payload));
             })
@@ -73,6 +74,7 @@ export const authSlice = createSlice({
             .addCase(register.fulfilled, (state, action: PayloadAction<UserAuthData>) => {
                 state.loading = false;
                 state.user = action.payload;
+                setToken(action.payload.token);
                 // Save token to local storage.
                 localStorage.setItem("userInfo", JSON.stringify(action.payload));
             })
