@@ -23,7 +23,7 @@ const Login = () => {
         if (user) {
             navigate(redirect);
         }
-    }, [user, redirect]);
+    }, [user, redirect, navigate]);
 
     const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();

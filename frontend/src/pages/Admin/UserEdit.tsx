@@ -39,7 +39,7 @@ const UserEdit = () => {
                 }
             }
         }
-    }, [dispatch, history, userId, user, updateSuccess]);
+    }, [dispatch, navigate, userId, user, updateSuccess]);
 
     const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();

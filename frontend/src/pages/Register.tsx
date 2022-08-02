@@ -27,7 +27,7 @@ const Register = () => {
             navigate(redirect);
             dispatch(clearRegisterState());
         }
-    }, [dispatch, user, redirect]);
+    }, [dispatch, navigate, user, redirect]);
 
     const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();

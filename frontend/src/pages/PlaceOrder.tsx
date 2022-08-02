@@ -38,7 +38,7 @@ const PlaceOrder = () => {
                 navigate(`/order/${order._id}`);
             }
         }
-    }, [history, success, order, dispatch, loading]);
+    }, [navigate, success, order, dispatch, loading]);
 
     const placeOrderHandler = () => {
         dispatch(

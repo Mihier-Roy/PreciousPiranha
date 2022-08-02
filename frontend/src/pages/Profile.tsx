@@ -40,7 +40,7 @@ const Profile = () => {
                 setEmail(userDetails.email);
             }
         }
-    }, [dispatch, user, userDetails, success]);
+    }, [dispatch, navigate, user, userDetails, success]);
 
     const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();
