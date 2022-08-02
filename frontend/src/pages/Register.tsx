@@ -27,7 +27,7 @@ const Register = ({ location, history }) => {
         }
     }, [dispatch, history, user, redirect]);
 
-    const submitHandler = (e) => {
+    const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();
         if (password !== confirmPassword) {
             setMessage("Passwords do not match");

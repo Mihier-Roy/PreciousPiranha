@@ -25,7 +25,7 @@ const UserList = ({ history }) => {
         }
     }, [dispatch, history, user, deleteSuccess]);
 
-    const deleteUserHandler = (id) => {
+    const deleteUserHandler = (id: string) => {
         if (window.confirm("Are you sure you want to delete this user?")) {
             dispatch(deleteUser(id));
         }

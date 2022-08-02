@@ -53,7 +53,7 @@ const OrderDetails = ({ match }) => {
         }
     }, [dispatch, orderID, order, successPay]);
 
-    const successPaymentHandler = (paymentResult) => {
+    const successPaymentHandler = (paymentResult: PaymentResult) => {
         console.log(paymentResult);
         dispatch(payOrder({ id: orderID, paymentResult }));
     };

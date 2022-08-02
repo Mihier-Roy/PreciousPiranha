@@ -23,7 +23,7 @@ const Login = ({ location, history }) => {
         }
     }, [history, user, redirect]);
 
-    const submitHandler = (e) => {
+    const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();
         dispatch(login({ email, password }));
     };

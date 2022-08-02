@@ -14,7 +14,7 @@ const PaymentMethod = ({ history }) => {
         history.push("/shipping");
     }
 
-    const submitHandler = (e) => {
+    const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();
         dispatch(savePaymentMethod(paymentMethod));
         history.push("/placeorder");

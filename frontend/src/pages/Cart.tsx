@@ -17,7 +17,7 @@ const Cart = ({ match, location, history }) => {
         }
     }, [dispatch, productID, quantity]);
 
-    const removeItemHandler = (id) => {
+    const removeItemHandler = (id: number) => {
         dispatch(removeItem(id));
     };
 

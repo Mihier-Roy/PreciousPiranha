@@ -39,7 +39,7 @@ const UserEdit = ({ match, history }) => {
         }
     }, [dispatch, history, userId, user, updateSuccess]);
 
-    const submitHandler = (e) => {
+    const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();
         dispatch(updateUser({ _id: userId, name, email, isAdmin }));
     };

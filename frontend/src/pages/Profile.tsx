@@ -39,7 +39,7 @@ const Profile = ({ history }) => {
         }
     }, [dispatch, history, user, userDetails, success]);
 
-    const submitHandler = (e) => {
+    const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();
         if (password !== confirmPassword) {
             setMessage("Passwords do not match");

@@ -15,7 +15,7 @@ const Shipping = ({ history }) => {
     const [statePostalCode, setStatePostalCode] = useState<string>(postalCode);
     const [stateCountry, setStateCountry] = useState<string>(country);
 
-    const submitHandler = (e) => {
+    const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();
         dispatch(saveShippingAddress({ address, city, postalCode, country }));
         history.push("/payment");
