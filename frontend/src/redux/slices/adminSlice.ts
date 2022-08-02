@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import { deleteRequest, getRequest, putRequest } from "../../client/api";
 
 interface AdminState {
     users: User[];
@@ -17,64 +17,33 @@ const initialState: AdminState = {
     success: false
 };
 
-export const getAllUsers = createAsyncThunk<User[], void, { state }>(
-    "admin/getAllUsers",
-    async (_, { getState }) => {
-        const { data } = await axios.get(`/api/users`, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-            }
-        });
-        return data as User[];
-    }
-);
+export const getAllUsers = createAsyncThunk<User[], void>("admin/getAllUsers", async () => {
+    const { data } = await getRequest(`/api/users`, true);
+    return data as User[];
+});
 
-export const deleteUser = createAsyncThunk<string, string, { state }>(
-    "admin/deleteUser",
-    async (id, { getState }) => {
-        const { data } = await axios.delete(`/api/users/${id}`, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-            }
-        });
-        return data.message;
-    }
-);
+export const deleteUser = createAsyncThunk<string, string>("admin/deleteUser", async (id) => {
+    const { data } = await deleteRequest(`/api/users/${id}`, true);
+    return data.message;
+});
 
-export const getUserDetails = createAsyncThunk<User, string, { state }>(
-    "admin/getUserDetails",
-    async (id, { getState }) => {
-        const { data } = await axios.get(`/api/users/${id}`, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-            }
-        });
-        return data as User;
-    }
-);
+export const getUserDetails = createAsyncThunk<User, string>("admin/getUserDetails", async (id) => {
+    const { data } = await getRequest(`/api/users/${id}`, true);
+    return data as User;
+});
 
-export const updateUser = createAsyncThunk<User, User, { state }>(
-    "admin/updateUser",
-    async (user, { getState }) => {
-        const { data } = await axios.put(`/api/users/${user._id}`, user, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-            }
-        });
-        return data as User;
-    }
-);
+export const updateUser = createAsyncThunk<User, User>("admin/updateUser", async (user) => {
+    const { data } = await putRequest(`/api/users/${user._id}`, user, true);
+    return data as User;
+});
 
 export const adminSlice = createSlice({
     name: "admin",
     initialState,
     reducers: {
         resetState(state) {
-            (state.user = null), (state.users = []);
+            state.user = null;
+            state.users = [];
         }
     },
     extraReducers: (builder) => {

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import { getRequest, putRequest } from "../../client/api";
+import { AppDispatch } from "../store";
 
 interface UserProfileState {
     userDetails: UserProfile | null;
@@ -15,29 +16,19 @@ const initialState: UserProfileState = {
     error: null
 };
 
-export const getDetails = createAsyncThunk<UserProfile, void, { state }>(
+export const getDetails = createAsyncThunk<UserProfile, void>(
     "user/getDetails",
     async (_, { getState }) => {
         // Make a GEt request to the profiles endpint to fetch user information
-        const { data } = await axios.get(`/api/users/profile`, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-            }
-        });
+        const { data } = await getRequest(`/api/users/profile`, true);
         return data as UserProfile;
     }
 );
 
-export const updateDetails = createAsyncThunk<UserProfile, UserProfile, { state; dispatch }>(
+export const updateDetails = createAsyncThunk<UserProfile, UserProfile, { dispatch: AppDispatch }>(
     "user/updateDetails",
     async (user, { getState, dispatch }) => {
-        const { data } = await axios.put(`/api/users/profile`, user, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-            }
-        });
+        const { data } = await putRequest(`/api/users/profile`, user, true);
         dispatch({ type: "auth/login/fulfilled", payload: data });
         return data as UserProfile;
     }

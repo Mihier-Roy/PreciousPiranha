@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import { postRequest } from "../../client/api";
+import { RootState } from "../store";
 
 interface AuthState {
     user: UserAuthData | null;
@@ -17,12 +18,7 @@ export const login = createAsyncThunk<UserAuthData, LoginData>(
     "auth/login",
     async (loginData: LoginData) => {
         const { email, password } = loginData;
-        // Make a request to the user login endpoint to retrieve the user token
-        const { data } = await axios.post(
-            `/api/users/login`,
-            { email, password },
-            { headers: { "Content-Type": "application/json" } }
-        );
+        const { data } = await postRequest(`/api/users/login`, { email, password }, false);
         return data as UserAuthData;
     }
 );
@@ -32,11 +28,7 @@ export const register = createAsyncThunk<UserAuthData, RegisterData>(
     async (registerData: RegisterData) => {
         const { name, email, password } = registerData;
         // Make a request to the registeration endpoint to register the user and retrieve a token
-        const { data } = await axios.post(
-            `/api/users`,
-            { name, email, password },
-            { headers: { "Content-Type": "application/json" } }
-        );
+        const { data } = await postRequest(`/api/users`, { name, email, password }, false);
         return data as UserAuthData;
     }
 );
@@ -95,3 +87,10 @@ export const authSlice = createSlice({
 
 export const { logout, clearRegisterState } = authSlice.actions;
 export default authSlice.reducer;
+
+export const getToken = (state: RootState) => {
+    if (state.auth.user) {
+        return state.auth.user.token;
+    }
+    return null;
+};

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import { getRequest, postRequest, putRequest } from "../../client/api";
 
 interface OrderState {
     order: Partial<OrderDetails>;
@@ -17,58 +17,34 @@ const initialState: OrderState = {
     error: null
 };
 
-export const createOrder = createAsyncThunk<OrderDetails, Partial<OrderDetails>, { state }>(
+export const createOrder = createAsyncThunk<OrderDetails, Partial<OrderDetails>>(
     "order/createOrder",
-    async (order, { getState }) => {
-        const { data } = await axios.post(`/api/orders`, order, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-            }
-        });
+    async (order) => {
+        const { data } = await postRequest(`/api/orders`, order, true);
         return data as OrderDetails;
     }
 );
 
-export const getOrderDetails = createAsyncThunk<OrderDetails, string, { state }>(
+export const getOrderDetails = createAsyncThunk<OrderDetails, string>(
     "order/getOrderDetails",
-    async (id, { getState }) => {
-        const { data } = await axios.get(`/api/orders/${id}`, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-            }
-        });
+    async (id) => {
+        const { data } = await getRequest(`/api/orders/${id}`, true);
         return data as OrderDetails;
     }
 );
 
 export const payOrder = createAsyncThunk<
     OrderDetails,
-    { id: string; paymentResult: PaymentResult },
-    { state }
->("order/payOrder", async ({ id, paymentResult }, { getState }) => {
-    const { data } = await axios.put(`/api/orders/${id}/pay`, paymentResult, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-        }
-    });
+    { id: string; paymentResult: PaymentResult }
+>("order/payOrder", async ({ id, paymentResult }) => {
+    const { data } = await putRequest(`/api/orders/${id}/pay`, paymentResult, true);
     return data;
 });
 
-export const listOrders = createAsyncThunk<OrderDetails[], void, { state }>(
-    "order/listMyOrders",
-    async (_, { getState }) => {
-        const { data } = await axios.get(`/api/orders/myorders`, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
-            }
-        });
-        return data;
-    }
-);
+export const listOrders = createAsyncThunk<OrderDetails[], void>("order/listMyOrders", async () => {
+    const { data } = await getRequest(`/api/orders/myorders`, true);
+    return data;
+});
 
 export const orderSlice = createSlice({
     name: "order",
