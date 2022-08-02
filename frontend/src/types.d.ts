@@ -54,9 +54,10 @@ type OrderDetails = {
     shippingPrice: number;
     totalPrice: number;
     isPaid: boolean;
-    paidAt: Date | null;
+    paidAt: string;
     isDelivered: boolean;
-    deliveredAt: Date | null;
+    deliveredAt: string;
+    createdAt: string;
 };
 
 type UserAuthData = {
