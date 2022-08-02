@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { PayPalButton } from "react-paypal-button-v2";
@@ -8,8 +8,9 @@ import Loading from "../components/Loader";
 import { getOrderDetails, payOrder } from "../redux/slices/orderSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
-const OrderDetails = ({ match }) => {
-    const orderID = match.params.id;
+const OrderDetails = () => {
+    let params = useParams();
+    const orderID = params.id;
     const dispatch = useAppDispatch();
     const [sdkReady, setSdkReady] = useState<boolean>(false);
 
@@ -42,7 +43,7 @@ const OrderDetails = ({ match }) => {
             document.body.appendChild(script);
         };
 
-        if (!order || successPay || order._id !== orderID) {
+        if (orderID && (!order || successPay || order._id !== orderID)) {
             dispatch(getOrderDetails(orderID));
         } else if (!order.isPaid) {
             if (!window.paypal) {
@@ -54,8 +55,9 @@ const OrderDetails = ({ match }) => {
     }, [dispatch, orderID, order, successPay]);
 
     const successPaymentHandler = (paymentResult: PaymentResult) => {
-        console.log(paymentResult);
-        dispatch(payOrder({ id: orderID, paymentResult }));
+        if (orderID) {
+            dispatch(payOrder({ id: orderID, paymentResult }));
+        }
     };
 
     return loading ? (

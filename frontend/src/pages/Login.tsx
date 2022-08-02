@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
@@ -7,7 +7,9 @@ import AlertMessage from "../components/AlertMessage";
 import { login } from "../redux/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
-const Login = ({ location, history }) => {
+const Login = () => {
+    let location = useLocation();
+    let navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -19,9 +21,9 @@ const Login = ({ location, history }) => {
 
     useEffect(() => {
         if (user) {
-            history.push(redirect);
+            navigate(redirect);
         }
-    }, [history, user, redirect]);
+    }, [user, redirect]);
 
     const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();

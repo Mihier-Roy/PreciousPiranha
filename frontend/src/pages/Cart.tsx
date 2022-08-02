@@ -1,15 +1,20 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button, Col, FormControl, Image, ListGroup, Row } from "react-bootstrap";
 import AlertMessage from "../components/AlertMessage";
 import { addItemToCart, removeItem } from "../redux/slices/cartSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { RootState } from "../redux/store";
 
-const Cart = ({ match, location, history }) => {
+const Cart = () => {
+    let params = useParams();
+    let navigate = useNavigate();
+    let location = useLocation();
     const dispatch = useAppDispatch();
-    const productID = match.params.id;
+
+    const productID = Number(params.id);
     const quantity = location.search ? Number(location.search.split("=")[1]) : 1;
-    const { cartItems } = useAppSelector((state) => state.cart);
+    const { cartItems } = useAppSelector((state: RootState) => state.cart);
 
     useEffect(() => {
         if (productID) {
@@ -22,7 +27,7 @@ const Cart = ({ match, location, history }) => {
     };
 
     const checkoutHandler = () => {
-        history.push(`/login?redirect=shipping`);
+        navigate(`/login?redirect=shipping`);
     };
 
     return (

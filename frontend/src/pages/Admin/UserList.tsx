@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
 import AlertMessage from "../../components/AlertMessage";
@@ -6,7 +7,8 @@ import Loader from "../../components/Loader";
 import { getAllUsers, deleteUser } from "../../redux/slices/adminSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
-const UserList = ({ history }) => {
+const UserList = () => {
+    let navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const {
@@ -21,9 +23,9 @@ const UserList = ({ history }) => {
         if (user && user.isAdmin) {
             dispatch(getAllUsers());
         } else {
-            history.push("/login");
+            navigate("/login");
         }
-    }, [dispatch, history, user, deleteSuccess]);
+    }, [dispatch, user, deleteSuccess]);
 
     const deleteUserHandler = (id: string) => {
         if (window.confirm("Are you sure you want to delete this user?")) {

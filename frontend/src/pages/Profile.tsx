@@ -6,8 +6,12 @@ import { LinkContainer } from "react-router-bootstrap";
 import { getDetails, updateDetails, resetUpdateProfile } from "../redux/slices/userSlice";
 import { listOrders } from "../redux/slices/orderSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { useNavigate } from "react-router-dom";
 
-const Profile = ({ history }) => {
+const Profile = () => {
+    let navigate = useNavigate();
+    const dispatch = useAppDispatch();
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -15,7 +19,6 @@ const Profile = ({ history }) => {
     const [message, setMessage] = useState<string>("");
     const [updateSuccess, setUpdateSuccess] = useState<boolean>(false);
 
-    const dispatch = useAppDispatch();
     const { loading, error, success, userDetails } = useAppSelector((state) => state.user);
     const { user } = useAppSelector((state) => state.auth);
     const {
@@ -26,7 +29,7 @@ const Profile = ({ history }) => {
 
     useEffect(() => {
         if (!user) {
-            history.push("/");
+            navigate("/");
         } else {
             if (!userDetails || !userDetails.name || success) {
                 dispatch(getDetails());
@@ -37,7 +40,7 @@ const Profile = ({ history }) => {
                 setEmail(userDetails.email);
             }
         }
-    }, [dispatch, history, user, userDetails, success]);
+    }, [dispatch, user, userDetails, success]);
 
     const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();

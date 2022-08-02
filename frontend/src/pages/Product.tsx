@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Image, ListGroup, Button, FormControl } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import AlertMessage from "../components/AlertMessage";
 import { listProductDetails } from "../redux/slices/productSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
-const Product = ({ history, match }) => {
+const Product = () => {
+    let params = useParams();
+    const id = params.id;
+    let navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [quantity, setQuantity] = useState(1);
     const { loading, error, product } = useAppSelector((state) => state.product);
 
     useEffect(() => {
-        dispatch(listProductDetails(match.params.id));
-    }, [dispatch, match.params.id]);
+        if (id) {
+            dispatch(listProductDetails(id));
+        }
+    }, [dispatch, id]);
 
     const addToCartHandler = () => {
-        history.push(`/cart/${match.params.id}?quantity=${quantity}`);
+        navigate(`/cart/${id}?quantity=${quantity}`);
     };
 
     return (

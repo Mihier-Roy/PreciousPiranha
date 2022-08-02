@@ -22,18 +22,18 @@ const App = () => {
             <Header />
             <main className="py-3">
                 <Container>
-                    <Route path="/login" component={Login} />
-                    <Route path="/profile" component={Profile} />
-                    <Route path="/register" component={Register} />
-                    <Route path="/product/:id" component={Product} />
-                    <Route path="/cart/:id?" component={Cart} />
-                    <Route path="/shipping" component={Shipping} />
-                    <Route path="/payment" component={PaymentMethod} />
-                    <Route path="/placeorder" component={PlaceOrder} />
-                    <Route path="/order/:id" component={OrderDetails} />
-                    <Route path="/admin/users" component={UserList} />
-                    <Route path="/admin/user/edit/:id" component={UserEdit} />
-                    <Route exact path="/" component={Home} />
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/product/:id" element={<Product />} />
+                    <Route path="/cart/:id?" element={<Cart />} />
+                    <Route path="/shipping" element={<Shipping />} />
+                    <Route path="/payment" element={<PaymentMethod />} />
+                    <Route path="/placeorder" element={<PlaceOrder />} />
+                    <Route path="/order/:id" element={<OrderDetails />} />
+                    <Route path="/admin/users" element={<UserList />} />
+                    <Route path="/admin/user/edit/:id" element={<UserEdit />} />
                 </Container>
             </main>
             <Footer />

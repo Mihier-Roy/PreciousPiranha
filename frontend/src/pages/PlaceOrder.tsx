@@ -1,21 +1,22 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import CheckoutSteps from "../components/CheckoutSteps";
 import AlertMessage from "../components/AlertMessage";
 import { createOrder } from "../redux/slices/orderSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
-const PlaceOrder = ({ history }) => {
+const PlaceOrder = () => {
+    let navigate = useNavigate();
     const dispatch = useAppDispatch();
     const cart = useAppSelector((state) => state.cart);
     // Get data from state to check if order was successfully placed
     const { order, success, error, loading } = useAppSelector((state) => state.order);
 
     if (!cart.shippingAddress.address) {
-        history.push("/shipping");
+        navigate("/shipping");
     } else if (!cart.paymentMethod) {
-        history.push("/payment");
+        navigate("/payment");
     }
 
     // Calculate item, shipping, tax and total prices
@@ -34,7 +35,7 @@ const PlaceOrder = ({ history }) => {
     useEffect(() => {
         if (!loading && success) {
             if ("_id" in order) {
-                history.push(`/order/${order._id}`);
+                navigate(`/order/${order._id}`);
             }
         }
     }, [history, success, order, dispatch, loading]);

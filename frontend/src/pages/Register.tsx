@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
@@ -7,7 +7,9 @@ import AlertMessage from "../components/AlertMessage";
 import { register, clearRegisterState } from "../redux/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
-const Register = ({ location, history }) => {
+const Register = () => {
+    let navigate = useNavigate();
+    let location = useLocation();
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -22,10 +24,10 @@ const Register = ({ location, history }) => {
 
     useEffect(() => {
         if (user) {
-            history.push(redirect);
+            navigate(redirect);
             dispatch(clearRegisterState());
         }
-    }, [dispatch, history, user, redirect]);
+    }, [dispatch, user, redirect]);
 
     const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();

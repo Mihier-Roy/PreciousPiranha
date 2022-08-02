@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import AlertMessage from "../../components/AlertMessage";
 import Loader from "../../components/Loader";
@@ -7,9 +7,11 @@ import FormContainer from "../../components/FormContainer";
 import { getUserDetails, updateUser, resetState } from "../../redux/slices/adminSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
-const UserEdit = ({ match, history }) => {
-    const userId = match.params.id;
+const UserEdit = () => {
+    let params = useParams();
+    let navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const userId = params.id;
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -25,10 +27,10 @@ const UserEdit = ({ match, history }) => {
     useEffect(() => {
         if (updateSuccess) {
             dispatch(resetState());
-            history.push("/admin/users");
+            navigate("/admin/users");
         } else {
             if (user) {
-                if (!user.name || user._id !== userId) {
+                if (userId && (!user.name || user._id !== userId)) {
                     dispatch(getUserDetails(userId));
                 } else {
                     setName(user.name);
@@ -41,7 +43,9 @@ const UserEdit = ({ match, history }) => {
 
     const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();
-        dispatch(updateUser({ _id: userId, name, email, isAdmin }));
+        if (userId) {
+            dispatch(updateUser({ _id: userId, name, email, isAdmin }));
+        }
     };
 
     return (

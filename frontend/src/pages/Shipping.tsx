@@ -4,8 +4,10 @@ import FormContainer from "../components/FormContainer";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { saveShippingAddress } from "../redux/slices/cartSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { useNavigate } from "react-router-dom";
 
-const Shipping = ({ history }) => {
+const Shipping = () => {
+    let navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { shippingAddress } = useAppSelector((state) => state.cart);
     const { address, city, postalCode, country } = shippingAddress;
@@ -18,7 +20,7 @@ const Shipping = ({ history }) => {
     const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();
         dispatch(saveShippingAddress({ address, city, postalCode, country }));
-        history.push("/payment");
+        navigate("/payment");
     };
 
     return (
