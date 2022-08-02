@@ -25,6 +25,7 @@ type CartItem = {
     image: string;
     price: number;
     productID: number;
+    countInStock: number;
 };
 
 type ShippingAddress = {
