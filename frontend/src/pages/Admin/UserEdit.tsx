@@ -1,45 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import AlertMessage from "../../components/AlertMessage";
 import Loader from "../../components/Loader";
 import FormContainer from "../../components/FormContainer";
-import { getUserDetails, updateUser } from "../../redux/actions/userActions";
-import {
-    USER_ADMIN_UPDATE_RESET,
-    USER_ADMIN_DETAILS_RESET
-} from "../../redux/constants/userConstants";
+import { getUserDetails, updateUser, resetState } from "../../redux/slices/adminSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 const UserEdit = ({ match, history }) => {
     const userId = match.params.id;
+    const dispatch = useAppDispatch();
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [isAdmin, setIsAdmin] = useState(false);
 
-    const dispatch = useDispatch();
-
-    const { loading: loadingDetails, error: errorDetails, user } = useSelector(
-        (state) => state.userDetails
-    );
-    const { loading, error, success } = useSelector((state) => state.userAdminUpdate);
+    const {
+        loading: loadingDetails,
+        error: errorDetails,
+        success: updateSuccess,
+        user
+    } = useAppSelector((state) => state.admin);
 
     useEffect(() => {
-        if (success) {
-            dispatch({ type: USER_ADMIN_UPDATE_RESET });
-            dispatch({ type: USER_ADMIN_DETAILS_RESET });
+        if (updateSuccess) {
+            dispatch(resetState());
             history.push("/admin/users");
         } else {
-            if (!user.name || user._id !== userId) {
-                dispatch(getUserDetails(userId));
-            } else {
-                setName(user.name);
-                setEmail(user.email);
-                setIsAdmin(user.isAdmin);
+            if (user) {
+                if (!user.name || user._id !== userId) {
+                    dispatch(getUserDetails(userId));
+                } else {
+                    setName(user.name);
+                    setEmail(user.email);
+                    setIsAdmin(user.isAdmin);
+                }
             }
         }
-    }, [dispatch, history, userId, user, success]);
+    }, [dispatch, history, userId, user, updateSuccess]);
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -53,8 +51,6 @@ const UserEdit = ({ match, history }) => {
             </Link>
             <FormContainer>
                 <h1>Edit User</h1>
-                {loading && <Loader />}
-                {error && <AlertMessage variant="danger">{error}</AlertMessage>}
                 {loadingDetails ? (
                     <Loader />
                 ) : errorDetails ? (
