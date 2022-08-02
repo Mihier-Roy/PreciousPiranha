@@ -1,29 +1,27 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Col, FormControl, Image, ListGroup, Row } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import AlertMessage from "../components/AlertMessage";
-import { addItemToCart, removeItemFromCart } from "../redux/actions/cartActions";
+import { addItemToCart, removeItem } from "../redux/slices/cartSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const Cart = ({ match, location, history }) => {
+    const dispatch = useAppDispatch();
     const productID = match.params.id;
     const quantity = location.search ? Number(location.search.split("=")[1]) : 1;
-
-    const dispatch = useDispatch();
-
-    const { cartItems } = useSelector((state) => state.cart);
+    const { cartItems } = useAppSelector((state) => state.cart);
 
     useEffect(() => {
         if (productID) {
-            dispatch(addItemToCart(productID, quantity));
+            dispatch(addItemToCart({ id: productID, quantity }));
         }
     }, [dispatch, productID, quantity]);
 
     const removeItemHandler = (id) => {
-        dispatch(removeItemFromCart(id));
+        dispatch(removeItem(id));
     };
 
-    const checkoutHandler = (id) => {
+    const checkoutHandler = () => {
         history.push(`/login?redirect=shipping`);
     };
 
@@ -56,10 +54,10 @@ const Cart = ({ match, location, history }) => {
                                             value={item.quantity}
                                             onChange={(e) =>
                                                 dispatch(
-                                                    addItemToCart(
-                                                        item.productID,
-                                                        Number(e.target.value)
-                                                    )
+                                                    addItemToCart({
+                                                        id: item.productID,
+                                                        quantity: Number(e.target.value)
+                                                    })
                                                 )
                                             }
                                         >
