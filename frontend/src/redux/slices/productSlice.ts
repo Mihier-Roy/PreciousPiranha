@@ -30,7 +30,7 @@ const initialState: ProductState = {
 export const listProducts = createAsyncThunk<ProductItem[], void>(
     "product/listProducts",
     async () => {
-        const { data } = await getRequest(`/api/products`, false);
+        const { data } = await getRequest(`/api/products`);
         return data as ProductItem[];
     }
 );
@@ -38,7 +38,7 @@ export const listProducts = createAsyncThunk<ProductItem[], void>(
 export const listProductDetails = createAsyncThunk<ProductItem, string>(
     "product/listProductDetails",
     async (id) => {
-        const { data } = await getRequest(`/api/products/${id}`, false);
+        const { data } = await getRequest(`/api/products/${id}`);
         return data as ProductItem;
     }
 );

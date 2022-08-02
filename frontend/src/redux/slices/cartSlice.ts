@@ -23,7 +23,7 @@ export const addItemToCart = createAsyncThunk<
     { data: ProductItem; quantity: number },
     { id: number; quantity: number }
 >("cart/addItem", async ({ id, quantity }) => {
-    const response = await getRequest(`/api/products/${id}`, false);
+    const response = await getRequest(`/api/products/${id}`);
     return { data: response.data, quantity };
 });
 

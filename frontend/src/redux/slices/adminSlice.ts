@@ -18,22 +18,22 @@ const initialState: AdminState = {
 };
 
 export const getAllUsers = createAsyncThunk<User[], void>("admin/getAllUsers", async () => {
-    const { data } = await getRequest(`/api/users`, true);
+    const { data } = await getRequest(`/api/users`);
     return data as User[];
 });
 
 export const deleteUser = createAsyncThunk<string, string>("admin/deleteUser", async (id) => {
-    const { data } = await deleteRequest(`/api/users/${id}`, true);
+    const { data } = await deleteRequest(`/api/users/${id}`);
     return data.message;
 });
 
 export const getUserDetails = createAsyncThunk<User, string>("admin/getUserDetails", async (id) => {
-    const { data } = await getRequest(`/api/users/${id}`, true);
+    const { data } = await getRequest(`/api/users/${id}`);
     return data as User;
 });
 
 export const updateUser = createAsyncThunk<User, User>("admin/updateUser", async (user) => {
-    const { data } = await putRequest(`/api/users/${user._id}`, user, true);
+    const { data } = await putRequest(`/api/users/${user._id}`, user);
     return data as User;
 });
 

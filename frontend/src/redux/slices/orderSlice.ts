@@ -20,7 +20,7 @@ const initialState: OrderState = {
 export const createOrder = createAsyncThunk<OrderDetails, Partial<OrderDetails>>(
     "order/createOrder",
     async (order) => {
-        const { data } = await postRequest(`/api/orders`, order, true);
+        const { data } = await postRequest(`/api/orders`, order);
         return data as OrderDetails;
     }
 );
@@ -28,7 +28,7 @@ export const createOrder = createAsyncThunk<OrderDetails, Partial<OrderDetails>>
 export const getOrderDetails = createAsyncThunk<OrderDetails, string>(
     "order/getOrderDetails",
     async (id) => {
-        const { data } = await getRequest(`/api/orders/${id}`, true);
+        const { data } = await getRequest(`/api/orders/${id}`);
         return data as OrderDetails;
     }
 );
@@ -37,12 +37,12 @@ export const payOrder = createAsyncThunk<
     OrderDetails,
     { id: string; paymentResult: PaymentResult }
 >("order/payOrder", async ({ id, paymentResult }) => {
-    const { data } = await putRequest(`/api/orders/${id}/pay`, paymentResult, true);
+    const { data } = await putRequest(`/api/orders/${id}/pay`, paymentResult);
     return data;
 });
 
 export const listOrders = createAsyncThunk<OrderDetails[], void>("order/listMyOrders", async () => {
-    const { data } = await getRequest(`/api/orders/myorders`, true);
+    const { data } = await getRequest(`/api/orders/myorders`);
     return data;
 });
 

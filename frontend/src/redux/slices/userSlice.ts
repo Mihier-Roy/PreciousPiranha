@@ -20,7 +20,7 @@ export const getDetails = createAsyncThunk<UserProfile, void>(
     "user/getDetails",
     async (_, { getState }) => {
         // Make a GEt request to the profiles endpint to fetch user information
-        const { data } = await getRequest(`/api/users/profile`, true);
+        const { data } = await getRequest(`/api/users/profile`);
         return data as UserProfile;
     }
 );
@@ -28,7 +28,7 @@ export const getDetails = createAsyncThunk<UserProfile, void>(
 export const updateDetails = createAsyncThunk<UserProfile, UserProfile, { dispatch: AppDispatch }>(
     "user/updateDetails",
     async (user, { getState, dispatch }) => {
-        const { data } = await putRequest(`/api/users/profile`, user, true);
+        const { data } = await putRequest(`/api/users/profile`, user);
         dispatch({ type: "auth/login/fulfilled", payload: data });
         return data as UserProfile;
     }
