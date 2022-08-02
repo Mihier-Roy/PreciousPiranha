@@ -1,25 +1,29 @@
 import React, { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import AlertMessage from "../../components/AlertMessage";
 import Loader from "../../components/Loader";
-import { getAllUsers, deleteUser } from "../../redux/actions/userActions";
+import { getAllUsers, deleteUser } from "../../redux/slices/adminSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 const UserList = ({ history }) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const { loading, error, users } = useSelector((state) => state.userList);
-    const { userInfo } = useSelector((state) => state.userLogin);
-    const { success } = useSelector((state) => state.userDelete);
+    const {
+        loading,
+        error,
+        users,
+        success: deleteSuccess
+    } = useAppSelector((state) => state.admin);
+    const { user } = useAppSelector((state) => state.auth);
 
     useEffect(() => {
-        if (userInfo && userInfo.isAdmin) {
+        if (user && user.isAdmin) {
             dispatch(getAllUsers());
         } else {
             history.push("/login");
         }
-    }, [dispatch, history, userInfo, success]);
+    }, [dispatch, history, user, deleteSuccess]);
 
     const deleteUserHandler = (id) => {
         if (window.confirm("Are you sure you want to delete this user?")) {
