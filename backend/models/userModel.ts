@@ -1,7 +1,14 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const userSchema = mongoose.Schema(
+interface User {
+    name: string;
+    password: string;
+    email: string;
+    isAdmin: boolean;
+}
+
+const userSchema = new mongoose.Schema<User>(
     {
         name: {
             type: String,
@@ -28,7 +35,7 @@ const userSchema = mongoose.Schema(
 );
 
 // Method to compare the hashed password with the one supplied by the user
-userSchema.methods.matchPassword = async function (enteredPassword) {
+userSchema.methods.matchPassword = async function (enteredPassword: string) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 

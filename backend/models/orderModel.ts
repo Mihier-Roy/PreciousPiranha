@@ -1,6 +1,23 @@
 import mongoose from "mongoose";
 
-const orderSchema = mongoose.Schema(
+interface Order {
+    user: User;
+    orderItems: CartItem[];
+    shippingAddress: ShippingAddress;
+    paymentMethod: string;
+    paymentResult: PaymentResult;
+    itemsPrice: number;
+    taxPrice: number;
+    shippingPrice: number;
+    totalPrice: number;
+    isPaid: boolean;
+    paidAt: string;
+    isDelivered: boolean;
+    deliveredAt: string;
+    createdAt: string;
+}
+
+const orderSchema = new mongoose.Schema<Order>(
     {
         user: {
             type: mongoose.Schema.Types.ObjectId,

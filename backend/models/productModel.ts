@@ -1,6 +1,26 @@
 import mongoose from "mongoose";
 
-const reviewSchema = mongoose.Schema(
+interface Reviews {
+    name: string;
+    rating: number;
+    comment: string;
+}
+
+interface Product {
+    user: string;
+    name: string;
+    image: string;
+    description: string;
+    brand: string;
+    category: string;
+    price: number;
+    countInStock: number;
+    rating: number;
+    numReviews: number;
+    reviews: Reviews[];
+}
+
+const reviewSchema = new mongoose.Schema<Reviews>(
     {
         name: {
             type: String,
@@ -20,7 +40,7 @@ const reviewSchema = mongoose.Schema(
     }
 );
 
-const productSchema = mongoose.Schema(
+const productSchema = new mongoose.Schema<Product>(
     {
         user: {
             type: mongoose.Schema.Types.ObjectId,
