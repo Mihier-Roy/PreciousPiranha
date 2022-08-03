@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-interface Order {
+interface Order extends mongoose.Document {
     user: User;
     orderItems: CartItem[];
     shippingAddress: ShippingAddress;
@@ -86,6 +86,6 @@ const orderSchema = new mongoose.Schema<Order>(
     }
 );
 
-const Order = mongoose.model("Order", orderSchema);
+const Order = mongoose.model<OrderDetails>("Order", orderSchema);
 
 export default Order;
