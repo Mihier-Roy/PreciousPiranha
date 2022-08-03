@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-import morgan from "morgan";
 import helmet from "helmet";
 import logger from "./logger.js";
 import productRoutes from "./routes/productRoutes.js";
@@ -9,6 +8,7 @@ import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import paypalRoutes from "./routes/paypalRoutes.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
+import morganMiddleware from "./middleware/morganMiddleware.js";
 
 // Load environment variables
 dotenv.config();
@@ -26,12 +26,7 @@ app.use(express.json());
 app.use(helmet());
 
 // Add Morgan middleware for request logging
-app.use(
-    morgan(
-        ":remote-addr - :method :url HTTP/:http-version :status :res[content-length] :referrer",
-        { stream: logger.stream }
-    )
-);
+app.use(morganMiddleware);
 
 // Routes
 app.use("/api/products", productRoutes);
