@@ -3,17 +3,16 @@
   "version": "1.0.0",
   "description": "API for eCommerce application",
   "main": "server.js",
-  "type": "module",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "express-async-handler": "^1.1.4",
-    "helmet": "^4.3.1",
+    "dotenv": "^8.2.0 ",
+    "express": "^4.18.1",
+    "express-async-handler": "^1.2.0",
+    "helmet": "^5.1.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.10",
     "morgan": "^1.10.0",
-    "winston": "^3.3.3"
+    "winston": "^3.8.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -27,8 +26,8 @@
   },
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/server.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -L dist/server.js\""
+    "start": "node ./dist/server.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -L ./dist/server.js\""
   },
   "repository": {
     "type": "git",
