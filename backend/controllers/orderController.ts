@@ -1,9 +1,15 @@
+import { Request } from "express";
 import asyncHandler from "express-async-handler";
-import Order from "../models/orderModel.js";
+import Order from "../models/orderModel";
+
+interface OrderRequests extends Request {
+    user?: User;
+    body: OrderDetails;
+}
 
 // Description 	: Create a new order
 // Route 		: POST /api/orders
-export const addOrderItems = asyncHandler(async (req, res) => {
+export const addOrderItems = asyncHandler(async (req: OrderRequests, res) => {
     const {
         orderItems,
         shippingAddress,
@@ -17,7 +23,7 @@ export const addOrderItems = asyncHandler(async (req, res) => {
     if (orderItems && orderItems.length === 0) {
         res.status(400);
         throw new Error("No items in cart");
-    } else {
+    } else if (req.user) {
         const order = new Order({
             orderItems,
             shippingAddress,
@@ -35,6 +41,9 @@ export const addOrderItems = asyncHandler(async (req, res) => {
             res.status(500);
             throw new Error("Unable to place order. Please try again.");
         }
+    } else {
+        res.status(500);
+        throw new Error("Unable to place order. Please try again.");
     }
 });
 
@@ -55,7 +64,7 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (order) {
         order.isPaid = true;
-        order.paidAt = Date.now();
+        order.paidAt = Date.now().toString();
         order.paymentResult = {
             id: req.body.id,
             status: req.body.status,
@@ -73,7 +82,9 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
 
 // Description 	: Returns orders for the logged in user
 // Route 		: GET /api/orders/myorders
-export const getOrdersByUser = asyncHandler(async (req, res) => {
-    const orders = await Order.find({ user: req.user._id });
-    res.json(orders);
+export const getOrdersByUser = asyncHandler(async (req: OrderRequests, res) => {
+    if (req.user) {
+        const orders = await Order.find({ user: req.user });
+        res.json(orders);
+    }
 });
