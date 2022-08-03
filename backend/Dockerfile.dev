@@ -15,4 +15,4 @@ COPY  --chown=node:node . .
 
 # Expose the application on port 5000
 EXPOSE 5000
-CMD [ "nodemon", "-L", "server.js"]
+CMD [ "npm", "run", "dev"]
