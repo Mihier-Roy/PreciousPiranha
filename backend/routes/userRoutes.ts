@@ -8,8 +8,8 @@ import {
     deleteUserById,
     updateUserById,
     getUserById
-} from "../controllers/userController.js";
-import { verifyToken, verifyAdmin } from "../middleware/authMiddleware.js";
+} from "../controllers/userController";
+import { verifyToken, verifyAdmin } from "../middleware/authMiddleware";
 
 const router = Router();
 

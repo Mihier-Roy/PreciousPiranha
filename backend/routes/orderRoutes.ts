@@ -4,8 +4,8 @@ import {
     getOrderById,
     updateOrderToPaid,
     getOrdersByUser
-} from "../controllers/orderController.js";
-import { verifyToken } from "../middleware/authMiddleware.js";
+} from "../controllers/orderController";
+import { verifyToken } from "../middleware/authMiddleware";
 
 const router = Router();
 
