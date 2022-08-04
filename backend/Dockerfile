@@ -11,6 +11,9 @@ RUN npm ci --omit=dev
 # Copy source code (and all other relevant files)
 COPY --chown=node:node . .
 
+# Build the application
+RUN npm run build
+
 # Expose the application on port 5000
 EXPOSE 5000
-CMD [ "node", "server.js" ]
+CMD [ "node", "dist/server.js" ]

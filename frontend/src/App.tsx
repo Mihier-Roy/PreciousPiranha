@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -22,18 +22,22 @@ const App = () => {
             <Header />
             <main className="py-3">
                 <Container>
-                    <Route path="/login" component={Login} />
-                    <Route path="/profile" component={Profile} />
-                    <Route path="/register" component={Register} />
-                    <Route path="/product/:id" component={Product} />
-                    <Route path="/cart/:id?" component={Cart} />
-                    <Route path="/shipping" component={Shipping} />
-                    <Route path="/payment" component={PaymentMethod} />
-                    <Route path="/placeorder" component={PlaceOrder} />
-                    <Route path="/order/:id" component={OrderDetails} />
-                    <Route path="/admin/users" component={UserList} />
-                    <Route path="/admin/user/edit/:id" component={UserEdit} />
-                    <Route exact path="/" component={Home} />
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/product/:id" element={<Product />} />
+                        <Route path="/cart" element={<Cart />}>
+                            <Route path=":id" element={<Cart />} />
+                        </Route>
+                        <Route path="/shipping" element={<Shipping />} />
+                        <Route path="/payment" element={<PaymentMethod />} />
+                        <Route path="/placeorder" element={<PlaceOrder />} />
+                        <Route path="/order/:id" element={<OrderDetails />} />
+                        <Route path="/admin/users" element={<UserList />} />
+                        <Route path="/admin/user/edit/:id" element={<UserEdit />} />
+                    </Routes>
                 </Container>
             </main>
             <Footer />
