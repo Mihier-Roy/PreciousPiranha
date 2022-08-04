@@ -40,10 +40,6 @@ export const authSlice = createSlice({
         logout: (state) => {
             state.user = null;
             localStorage.removeItem("userInfo");
-            // TODO: Clear the following state
-            // disptach({ type: USER_PROFILE_RESET });
-            // disptach({ type: ORDER_USER_LIST_RESET });
-            // disptach({ type: USER_LIST_CLEAR });
         },
         clearRegisterState: (state) => {
             state.user = null;

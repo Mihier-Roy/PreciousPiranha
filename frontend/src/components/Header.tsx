@@ -2,6 +2,8 @@ import React from "react";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { logout } from "../redux/slices/authSlice";
+import { resetState } from "../redux/slices/adminSlice";
+import { resetUpdateProfile } from "../redux/slices/userSlice";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 
 const Header = () => {
@@ -10,6 +12,8 @@ const Header = () => {
 
     const logoutHandler = () => {
         dispatch(logout());
+        dispatch(resetState());
+        dispatch(resetUpdateProfile());
     };
 
     return (
