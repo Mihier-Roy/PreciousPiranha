@@ -54,12 +54,14 @@ export const orderSlice = createSlice({
         builder
             .addCase(createOrder.pending, (state) => {
                 state.loading = true;
+                state.error = null;
             })
             .addCase(
                 createOrder.fulfilled,
                 (state, action: PayloadAction<Partial<OrderDetails>>) => {
                     state.loading = false;
                     state.success = true;
+                    state.error = null;
                     state.order = action.payload;
                 }
             )

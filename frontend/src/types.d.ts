@@ -1,5 +1,5 @@
 type ProductItem = {
-    _id?: string;
+    _id: string;
     user: string;
     name: string;
     image: string;
@@ -24,7 +24,7 @@ type CartItem = {
     quantity: number;
     image: string;
     price: number;
-    productID: number;
+    productID: string;
     countInStock: number;
 };
 

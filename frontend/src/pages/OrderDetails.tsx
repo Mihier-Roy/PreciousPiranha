@@ -16,14 +16,14 @@ const OrderDetails = () => {
 
     // Get data from state to check if order was successfully placed
     const { order, error, loading } = useAppSelector((state) => state.order);
-    const { success: successPay, loading: loadingPay } = useAppSelector((state) => state.order);
+    let itemsPrice = 0;
 
     if (!loading && !error) {
         const addDecimals = (num: number) => {
             return Math.round(num * 100) / 100;
         };
         if (order.orderItems !== undefined) {
-            order.itemsPrice = addDecimals(
+            itemsPrice = addDecimals(
                 order.orderItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
             );
         }
@@ -42,9 +42,8 @@ const OrderDetails = () => {
             };
             document.body.appendChild(script);
         };
-
-        if (orderID && (!order || successPay || order._id !== orderID)) {
-            dispatch(getOrderDetails(orderID));
+        if (!order || order._id !== orderID) {
+            if (orderID) dispatch(getOrderDetails(orderID));
         } else if (!order.isPaid) {
             if (!window.paypal) {
                 addPayPalScript();
@@ -52,7 +51,7 @@ const OrderDetails = () => {
                 setSdkReady(true);
             }
         }
-    }, [dispatch, orderID, order, successPay]);
+    }, [dispatch, orderID, order]);
 
     const successPaymentHandler = (paymentResult: PaymentResult) => {
         if (orderID) {
@@ -149,7 +148,7 @@ const OrderDetails = () => {
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Items</Col>
-                                    <Col>${order.itemsPrice}</Col>
+                                    <Col>${itemsPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
@@ -172,7 +171,6 @@ const OrderDetails = () => {
                             </ListGroup.Item>
                             {!order.isPaid && (
                                 <ListGroup.Item>
-                                    {loadingPay && <Loading />}
                                     {!sdkReady ? (
                                         <Loading />
                                     ) : (

@@ -19,7 +19,14 @@ const Shipping = () => {
 
     const submitHandler = (e: React.SyntheticEvent) => {
         e.preventDefault();
-        dispatch(saveShippingAddress({ address, city, postalCode, country }));
+        dispatch(
+            saveShippingAddress({
+                address: stateAddress,
+                city: stateCity,
+                postalCode: statePostalCode,
+                country: stateCountry
+            })
+        );
         navigate("/payment");
     };
 

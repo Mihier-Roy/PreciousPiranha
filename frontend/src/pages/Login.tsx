@@ -14,14 +14,14 @@ const Login = () => {
     const [password, setPassword] = useState("");
 
     // Identify if the user is to be redirected after login is complete
-    const redirect = location.search ? location.search.split("=")[1] : "/";
+    const redirect = location.search ? location.search.split("=")[1] : "";
 
     const dispatch = useAppDispatch();
     const { loading, error, user } = useAppSelector((state) => state.auth);
 
     useEffect(() => {
         if (user) {
-            navigate(redirect);
+            navigate(`/${redirect}`);
         }
     }, [user, redirect, navigate]);
 

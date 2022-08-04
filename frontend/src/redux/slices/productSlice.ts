@@ -11,6 +11,7 @@ interface ProductState {
 const initialState: ProductState = {
     products: [],
     product: {
+        _id: "",
         user: "",
         name: "",
         image: "",

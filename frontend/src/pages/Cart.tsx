@@ -12,7 +12,7 @@ const Cart = () => {
     let location = useLocation();
     const dispatch = useAppDispatch();
 
-    const productID = Number(params.id);
+    const productID = params.id;
     const quantity = location.search ? Number(location.search.split("=")[1]) : 1;
     const { cartItems } = useAppSelector((state: RootState) => state.cart);
 
@@ -22,7 +22,7 @@ const Cart = () => {
         }
     }, [dispatch, productID, quantity]);
 
-    const removeItemHandler = (id: number) => {
+    const removeItemHandler = (id: string) => {
         dispatch(removeItem(id));
     };
 
@@ -48,7 +48,7 @@ const Cart = () => {
                                         <Image src={item.image} alt={item.name} fluid rounded />
                                     </Col>
                                     <Col md={3}>
-                                        <Link to={`/products/${item.productID}`}>
+                                        <Link to={`/product/${item.productID}`}>
                                             <h4>{item.name}</h4>
                                         </Link>
                                     </Col>

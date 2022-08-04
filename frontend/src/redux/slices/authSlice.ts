@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { postRequest, setToken } from "../../client/api";
+import { postRequest } from "../../client/api";
 import { RootState } from "../store";
 
 interface AuthState {
@@ -57,7 +57,6 @@ export const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action: PayloadAction<UserAuthData>) => {
                 state.loading = false;
                 state.user = action.payload;
-                setToken(action.payload.token);
                 // Save token to local storage.
                 localStorage.setItem("userInfo", JSON.stringify(action.payload));
             })
@@ -74,7 +73,6 @@ export const authSlice = createSlice({
             .addCase(register.fulfilled, (state, action: PayloadAction<UserAuthData>) => {
                 state.loading = false;
                 state.user = action.payload;
-                setToken(action.payload.token);
                 // Save token to local storage.
                 localStorage.setItem("userInfo", JSON.stringify(action.payload));
             })

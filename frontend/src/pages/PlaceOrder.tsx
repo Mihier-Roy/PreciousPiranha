@@ -23,14 +23,13 @@ const PlaceOrder = () => {
     const addDecimals = (num: number) => {
         return Math.round(num * 100) / 100;
     };
-    order.itemsPrice = addDecimals(
+    const itemsPrice = addDecimals(
         cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
     );
 
-    order.shippingPrice = addDecimals(order.itemsPrice > 100 ? 0 : 10);
-    order.taxPrice = addDecimals(0.15 * order.itemsPrice);
-    order.totalPrice =
-        Number(order.itemsPrice) + Number(order.shippingPrice) + Number(order.taxPrice);
+    const shippingPrice = addDecimals(itemsPrice > 100 ? 0 : 10);
+    const taxPrice = addDecimals(0.15 * itemsPrice);
+    const totalPrice = Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice);
 
     useEffect(() => {
         if (!loading && success) {
@@ -46,10 +45,10 @@ const PlaceOrder = () => {
                 orderItems: cart.cartItems,
                 shippingAddress: cart.shippingAddress,
                 paymentMethod: cart.paymentMethod,
-                itemsPrice: order.itemsPrice ? order.itemsPrice : 0,
-                shippingPrice: order.shippingPrice ? order.shippingPrice : 0,
-                taxPrice: order.taxPrice ? order.taxPrice : 0,
-                totalPrice: order.totalPrice ? order.totalPrice : 0
+                itemsPrice: itemsPrice,
+                shippingPrice: shippingPrice,
+                taxPrice: taxPrice,
+                totalPrice: totalPrice
             })
         );
     };
@@ -118,25 +117,25 @@ const PlaceOrder = () => {
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Items</Col>
-                                    <Col>${order.itemsPrice}</Col>
+                                    <Col>${itemsPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Shipping</Col>
-                                    <Col>${order.shippingPrice}</Col>
+                                    <Col>${shippingPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Tax</Col>
-                                    <Col>${order.taxPrice}</Col>
+                                    <Col>${taxPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Total</Col>
-                                    <Col>${order.totalPrice}</Col>
+                                    <Col>${totalPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
