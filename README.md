@@ -14,11 +14,8 @@ A simple eCommerce application to play around with programming web applications 
     -   [ ] Auxum
     -   [ ] Rocket
     -   [ ] Acticx Web
--   [ ] Java (Spring)
 -   [ ] Deno
--   [ ] Python
-    -   [ ] Flask
-    -   [ ] FastAPI
+-   [ ] ASP.NET
 
 ### Front-end
 
